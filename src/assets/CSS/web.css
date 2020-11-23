@@ -295,6 +295,12 @@ p {
 	padding-left: 0%;
 	background-color: transparent;
 }
+
+.infos ul li a{
+	color: #777b7e !important;
+	text-decoration: none;
+	cursor: pointer;
+}
 .disclaimer {
 	text-align: left;
 	max-width: 300px;
@@ -364,3 +370,8 @@ p {
 	
 }
 
+.card-title{
+	
+	border-top-left-radius: 20px !important;
+	border-top-right-radius: 20px !important;
+}

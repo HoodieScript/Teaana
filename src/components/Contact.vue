@@ -41,7 +41,7 @@
 
               <input
                 type="button"
-                @click="contactUs"
+                @click="contactUs()"
                 class="btn btn-sm float-right pl-3 pr-3 text-white"
                 style="background-color: #028476; border-radius: 20px"
                 value="Send"
@@ -55,6 +55,8 @@
 </template>
 <script>
 import axios from "axios";
+import swal from "sweetalert";
+
 export default {
   data() {
     return {
@@ -64,17 +66,17 @@ export default {
   },
   methods: {
     contactUs: async function () {
-      //json format ay javascriot notation
-
       const data = await axios.post("https://api.tea-ana.com/v1/auth/contact", {
         email: this.email,
         message: this.message,
       });
       console.log(data);
-      this.clear();
-    },
-    clear: function () {
-      (this.contactUs = true), (this.email = ""), (this.message = "");
+
+      swal(
+        "Message sent!",
+        "Thank you for letting us know your concern!",
+        "success"
+      );
     },
   },
 };

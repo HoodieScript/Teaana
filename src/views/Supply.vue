@@ -1,19 +1,21 @@
 <template>
   <div>
+    <Navbar />
     <Login />
     <Register />
+    <Supply />
     <Contact />
     <Footer />
     <PrivacyPolicy />
     <RefundPolicy />
     <TermsandConditions />
-    <Supply />
   </div>
 </template>
 <script>
-import Supply from "@/components/SupplyList.vue";
+import Navbar from "@/components/NavBar.vue";
 import Login from "@/components/Login.vue";
 import Register from "@/components/Register.vue";
+import Supply from "@/components/SupplyList.vue";
 import Contact from "@/components/Contact.vue";
 import Footer from "@/components/NavFooter.vue";
 import PrivacyPolicy from "@/components/PrivacyPolicy.vue";
@@ -22,38 +24,6 @@ import TermsandConditions from "@/components/TermsCondition.vue";
 import $ from "jquery";
 export default {
   mounted() {
-    // https://twitter.com/uixmat
-    /* 
-		function scrollNav() {
-			$(' ul li a').click(function () {
-				$('.active').removeClass('active');
-				$(this).addClass('active');
-			});
-		}
-
-		scrollNav();
-		 */
-    /*   $(document).ready(function () {
-      $(document).on("scroll", onScroll);
-    });
-
-    function onScroll(event) {
-      var scrollPosition = $(document).scrollTop();
-      $(".nav a").each(function () {
-        var currentLink = $(this);
-        var refElement = $(currentLink.attr("href"));
-        if (
-          refElement.position().top   <= scrollPosition &&
-          refElement.position().top + refElement.height() > scrollPosition
-        ) {
-          $(".nav ul li a").removeClass("active");
-          currentLink.addClass("active");
-        } else {
-          currentLink.removeClass("active");
-        }
-      });
-    } */
-
     function smooth_scroll_to(elem) {
       var offset = 1500;
 
@@ -75,10 +45,10 @@ export default {
     });
   },
   components: {
+    Navbar,
     Supply,
     Login,
     Register,
-
     Contact,
     Footer,
     PrivacyPolicy,

@@ -176,7 +176,7 @@
           v-model="input.price"
         />
       </div>
-      <small>Price varies on selected order</small>
+      <small>Price varies on selected order </small>
       <div class="input-group mt-3">
         <input
           type="submit"

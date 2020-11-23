@@ -43,7 +43,7 @@
             </div>
             <div class="form-group">
               <input
-                type="number"
+                type="tel"
                 class="form-control"
                 placeholder="contact number"
                 id="contactno"
@@ -93,17 +93,19 @@ export default {
   },
   methods: {
     register: async function () {
-      try {
-        const res = await axios.post(this.url + "/register", {
+      await axios
+        .post(this.url + "/register", {
           name: this.name,
           email: this.email,
           password: this.password,
           phone: this.phone,
+        })
+        .then((response) => {
+          console.log(response);
+        })
+        .catch((error) => {
+          console.log(error.response);
         });
-        console.log(res.data);
-      } catch (error) {
-        console.error(error);
-      }
     },
   },
 };

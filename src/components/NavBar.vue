@@ -103,7 +103,7 @@
           >
         </li>
         <li class="nav-item">
-          <a class="nav-link mr-2" v-bind:href="shoplink"> store </a>
+          <a class="nav-link mr-2" v-bind:href="shoplink"> Store </a>
         </li>
       </ul>
     </div>
@@ -127,7 +127,7 @@ export default {
     };
   },
   methods: {
-    getProfile: async function () {
+    /*    getProfile: async function () {
       try {
         const res = await axios.get("https://api.tea-ana.com/v1/auth/profile");
         this.data = res.data;
@@ -135,7 +135,7 @@ export default {
         console.error(error);
       }
     },
-    logout: async function () {
+  */ logout: async function () {
       try {
         const res = await axios.get("https://api.tea-ana.com/v1/auth/logout", {
           withCredentials: true,

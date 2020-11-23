@@ -40,44 +40,45 @@
       </div>
 
       <div class="row d-flex pt-5 pb-5 justify-content-center">
-        <b-card
+        <div
           v-for="product in filter"
           :key="product.id"
           img-alt="Image"
           img-top
           tag="article"
           style=""
-          class="m-3 border-0 items"
+          class="m-3 border-0 card items"
         >
           <label
-            class="text-dark text-left form-control border-0 font-weight-bold"
+            class="card-title p-3 text-dark text-left form-control border-0 font-weight-bold"
             >{{ product.name }}</label
           >
+          <div class="card-body">
+            <img
+              class="img img-fluid w-75 m-auto border-0 form-control"
+              alt="Tea-ana-product"
+              style="height: auto"
+              :src="path + `1601472795874-milktea1.png`"
+              fluid
+            />
 
-          <img
-            class="img img-fluid w-75 m-auto border-0 form-control"
-            alt="Tea-ana-product"
-            style="height: auto"
-            :src="path + `1601472795874-milktea1.png`"
-            fluid
-          />
-
-          <div class="order form-control border-0">
-            <label class="text-dark float-left align-self-center">
-              ₱{{ product.price }}
-            </label>
-            <button
-              id="show-btn"
-              data-toggle="modal"
-              data-target="#product-cart"
-              class="align-self-center float-right p-0 btn btn-md"
-              style="color: #5cd85c"
-              @click="addcart(product)"
-            >
-              <i class="fas fa-shopping-cart"></i>
-            </button>
+            <div class="order form-control border-0">
+              <label class="text-dark float-left align-self-center">
+                ₱{{ product.price }}
+              </label>
+              <button
+                id="show-btn"
+                data-toggle="modal"
+                data-target="#product-cart"
+                class="align-self-center float-right p-0 btn btn-md"
+                style="color: #5cd85c"
+                @click="orderProduct(product.id)"
+              >
+                <i class="fas fa-shopping-cart"></i>
+              </button>
+            </div>
           </div>
-        </b-card>
+        </div>
       </div>
 
       <div
@@ -118,10 +119,9 @@
                       placeholder="Username"
                       aria-label="Username"
                       aria-describedby="basic-addon1"
-                      v-model="input.name"
+                      v-model="addorders.name"
                     />
                   </div>
-
                   <figure>
                     <img
                       class="img img-fluid w-75 m-auto border-0 form-control"
@@ -132,139 +132,55 @@
                     />
                   </figure>
                 </div>
+
                 <div class="col-lg-5">
                   <div class="form-group">
-                    <select class="custom-select" id="inputGroupSelect01">
-                      <option selected>Size</option>
-                      <option value="1">16 Oz</option>
-                      <option value="2">22 Oz</option>
-                      <option value="3">1 L</option>
-                    </select>
-                  </div>
-                  <div class="form-group">
                     <select
-                      class="custom-select"
-                      id="inputGroupSelect01"
-                      v-model="input.sugarlevel"
+                      class="form-control custom-select mb-2"
+                      v-for="item in addorders.options"
+                      :key="item"
                     >
-                      <option selected>Sugar Level</option>
-                      <option value="1">25%</option>
-                      <option value="2">50%</option>
-                      <option value="3">75%</option>
-                      <option value="3">100%</option>
+                      <option selected>{{ item.name }}</option>
+                      <option
+                        v-for="valitem in item.values"
+                        :key="valitem"
+                        value="valitem.price"
+                      >
+                        {{ valitem.name }}
+                      </option>
                     </select>
-                  </div>
-                  <div class="form-group">
                     <input
                       type="number"
                       class="form-control"
-                      placeholder="Quantity"
+                      placeholder="Select Quantity"
+                      min="1"
+                      v-model="quantity"
                     />
                   </div>
-                  <div class="input-group">
+
+                  <div
+                    class="input-group"
+                    v-for="addon in addorders.addons"
+                    :key="addon"
+                  >
                     <div class="input-group-prepend">
                       <div class="input-group-text bg-transparent border-0">
                         <input
                           type="checkbox"
-                          aria-label="Checkbox for following text input"
+                          aria-label="Checkbox for following text input "
+                          value="addon.price"
                         />
                       </div>
                     </div>
-                    <label class="text-dark my-auto"
-                      >Black Pearl<small>(₱15.00)</small></label
-                    >
+                    <input
+                      type="text"
+                      class="form-control border-0"
+                      aria-label="Text input with checkbox "
+                      v-model="addon.name"
+                    />
+                    <small class="my-auto"> ₱ {{ addon.price }}</small>
                   </div>
-                  <div class="input-group">
-                    <div class="input-group-prepend">
-                      <div class="input-group-text bg-transparent border-0">
-                        <input
-                          type="checkbox"
-                          aria-label="Checkbox for following text input"
-                        />
-                      </div>
-                    </div>
-                    <label class="text-dark my-auto"
-                      >Fruit Jelly<small>(₱18.00)</small></label
-                    >
-                  </div>
-                  <div class="input-group">
-                    <div class="input-group-prepend">
-                      <div class="input-group-text bg-transparent border-0">
-                        <input
-                          type="checkbox"
-                          aria-label="Checkbox for following text input"
-                        />
-                      </div>
-                    </div>
-                    <label class="text-dark my-auto"
-                      >Nata De Coco<small>(₱22.00)</small></label
-                    >
-                  </div>
-                  <div class="input-group">
-                    <div class="input-group-prepend">
-                      <div class="input-group-text bg-transparent border-0">
-                        <input
-                          type="checkbox"
-                          aria-label="Checkbox for following text input"
-                        />
-                      </div>
-                    </div>
-                    <label class="text-dark my-auto"
-                      >Cream Cheese<small>(₱35.00)</small></label
-                    >
-                  </div>
-                  <div class="input-group">
-                    <div class="input-group-prepend">
-                      <div class="input-group-text bg-transparent border-0">
-                        <input
-                          type="checkbox"
-                          aria-label="Checkbox for following text input"
-                        />
-                      </div>
-                    </div>
-                    <label class="text-dark my-auto"
-                      >Pink Pearl<small>(₱15.00)</small></label
-                    >
-                  </div>
-                  <div class="input-group">
-                    <div class="input-group-prepend">
-                      <div class="input-group-text bg-transparent border-0">
-                        <input
-                          type="checkbox"
-                          aria-label="Checkbox for following text input"
-                        />
-                      </div>
-                    </div>
-                    <label class="text-dark my-auto"
-                      >Coffee Pearl<small>(₱15.00)</small></label
-                    >
-                  </div>
-                  <div class="input-group">
-                    <div class="input-group-prepend">
-                      <div class="input-group-text bg-transparent border-0">
-                        <input
-                          type="checkbox"
-                          aria-label="Checkbox for following text input"
-                        />
-                      </div>
-                    </div>
-                    <label class="text-dark my-auto"
-                      >Popping Boba<small>(₱15.00)</small></label
-                    >
-                  </div>
-                  <div class="input-group">
-                    <div class="input-group-prepend">
-                      <div class="input-group-text bg-transparent border-0">
-                        <input
-                          type="checkbox"
-                          aria-label="Checkbox for following text input"
-                        />
-                      </div>
-                    </div>
-                    <label class="text-dark my-auto"
-                      >Crushed Oreo<small>(₱18.00)</small></label
-                    >
-                  </div>
+
                   <hr />
                   <div class="input-group">
                     <input
@@ -275,10 +191,11 @@
                       placeholder="Price"
                       aria-label="Price"
                       aria-describedby="basic-addon1"
-                      v-model="input.price"
+                      v-model="TotalValue"
                     />
                   </div>
-                  <small>Price varies on selected order</small>
+
+                  <small>Price varies on selected order </small>
                   <div class="input-group mt-3">
                     <input
                       type="submit"
@@ -302,6 +219,11 @@ import axios from "axios";
 export default {
   data() {
     return {
+      quantity: 1,
+      addorders: [],
+      addonstotal: [],
+      total: null,
+      subtotal: [],
       //v-model for filters
       movetocartbtn: false,
 
@@ -339,39 +261,29 @@ export default {
         { value: "asc", text: "Low to High" },
         { value: "desc", text: "High to Low" },
       ],
-
-      input: {
-        id: "",
-        name: "",
-        price: "",
-        size: "",
-        sugarlevel: "",
-
-        quantity: "",
-        addOns: "",
-      },
     };
   },
 
   methods: {
     async getProducts() {
       let response = await axios.get(
-        "https://api.tea-ana.com/v1/products?select=name,price,productType,imagePath,category_id"
+        "https://api.tea-ana.com/v1/supplies" //endpoint
       );
       this.products = response.data.data;
       console.log(this.products);
     },
-    addcart: function (product) {
-      (this.movetocartbtn = true),
-        (this.input.id = product.id),
-        (this.input.name = product.name),
-        (this.input.price = product.price),
-        (this.input.size = product.size),
-        (this.input.sugarlevel = product.sugarlevel);
+
+    async orderProduct(id) {
+      axios
+        .get(`https://api.tea-ana.com/v1/products/` + id)
+        .then((response) => {
+          this.addorders = response.data.data;
+        });
+      console.log(this.addorders);
     },
   },
-
   async created() {
+    // fetch the data pag ka load
     this.getProducts();
   },
   computed: {
@@ -429,6 +341,14 @@ export default {
 
       //returns filted data
       return data;
+    },
+
+    TotalValue: function () {
+      let tot = this.addorders.price * this.quantity;
+      this.products.reduce(function (tot, addon, valitem) {
+        return parseInt(tot) + parseInt(addon.price) + parseInt(valitem.price);
+      });
+      return tot;
     },
   },
 };

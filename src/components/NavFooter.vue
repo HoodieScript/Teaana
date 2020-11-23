@@ -5,25 +5,36 @@
         <div class="col-lg-3 col-sm-6 infos">
           <h4 style="color: #666666">Contacts</h4>
           <ul class="list-group border-0">
-            <li class="list-group-item">Sales@tea-ana.com</li>
-            <li class="list-group-item">09270244269</li>
+            <li class="list-group-item">
+              <a>Sales@tea-ana.com</a>
+            </li>
+            <li class="list-group-item"><a>09270244269</a></li>
           </ul>
         </div>
         <div class="col-lg-3 col-sm-6 disclaimer">
           <h4 style="color: #666666">Disclaimer</h4>
           <ul class="list-group">
             <li class="list-group-item">
-              <a data-toggle="modal" data-target="#PrivacyPolicymodal"
+              <a
+                data-toggle="modal"
+                data-target="#PrivacyPolicymodal"
+                style="color: #777b7e"
                 >Privacy Policy</a
               >
             </li>
             <li class="list-group-item">
-              <a data-toggle="modal" data-target="#RefundPolicymodal"
+              <a
+                data-toggle="modal"
+                data-target="#RefundPolicymodal"
+                style="color: #777b7e"
                 >Refund Policy</a
               >
             </li>
             <li class="list-group-item">
-              <a data-toggle="modal" data-target="#TermsandConditions"
+              <a
+                data-toggle="modal"
+                data-target="#TermsandConditions"
+                style="color: #777b7e"
                 >Terms and Conditions</a
               >
             </li>

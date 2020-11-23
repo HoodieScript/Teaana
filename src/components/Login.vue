@@ -28,7 +28,7 @@
           </button>
         </div>
         <div class="modal-body p-4">
-          <form class="p-4" @submit.prevent="onSubmit">
+          <form class="p-4">
             <div class="form-group">
               <input
                 type="email"
@@ -83,6 +83,7 @@ axios.defaults.withCredentials = true;
 export default {
   data() {
     return {
+      account: "",
       email: "",
       password: "",
       url: "https://api.tea-ana.com/v1/auth",
@@ -91,8 +92,8 @@ export default {
   methods: {
     login: async function () {
       try {
-        const res = await axios.post(
-          this.url + "/login",
+        const res = await axios.get(
+          this.url + "/users",
           {
             email: this.email,
             password: this.password,
@@ -104,6 +105,16 @@ export default {
         console.error(error);
       }
     },
+    async getProfile() {
+      let response = await axios.get(
+        "https://api.tea-ana.com/v1/auth/profile" //endpoint
+      );
+      this.account = response.data.data;
+      console.log(this.account);
+    },
+  },
+  mounted() {
+    this.getProfile();
   },
 };
 </script>

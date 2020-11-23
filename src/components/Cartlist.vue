@@ -197,7 +197,7 @@
           </table>
         </div> -->
         <div class="scrollable-2 overflow-auto">
-          <table class="table sticky table-borderless text-center">
+          <table class="table mycart sticky table-borderless text-center">
             <thead>
               <tr>
                 <th scope="col">Image</th>
@@ -379,7 +379,7 @@ td:nth-child(4) {
   background-color: #444;
 }
 @media only screen and (max-width: 992px) {
-  table td:nth-child(1) {
+  table.mycart td:nth-child(1) {
     display: none;
   }
   table td {
@@ -388,7 +388,7 @@ td:nth-child(4) {
   table td button {
     font-size: 10px;
   }
-  table th:nth-child(1) {
+  table.mycart th:nth-child(1) {
     display: none;
   }
 }

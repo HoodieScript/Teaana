@@ -8,6 +8,11 @@ import Cart from '../views/Cart.vue';
 import Gallery from "../components/Gallery.vue"
 import Contact from "../components/Contact.vue"
 import Landing from "../components/Landing.vue"
+import Login from "../views/Login.vue"
+import Customer from "../views/Customer.vue"
+import StoredProducts from "../views/StoredProducts.vue"
+import AccountRegistered from "../views/AccountRegistered.vue"
+import StoredSupplies from "../views/StoredSupply.vue"
 
 Vue.use(VueRouter);
 
@@ -19,12 +24,12 @@ const routes = [
 	},
 	{
 		path: '/banner-section',
-		component: Home, Landing
+		component: Landing
 	},
 	{
 		path: '/#about-section',
 
-		component: Home, Gallery
+		component: Gallery
 
 	},
 	{
@@ -52,6 +57,31 @@ const routes = [
 		path: '/supply',
 		name: 'supply',
 		component: Supply,
+	},
+	{
+		path: '/teaana-login',
+		name: 'teaana-login',
+		component: Login,
+	},
+	{
+		path: '/customer',
+		name: 'customer',
+		component: Customer,
+	},
+	{
+		path: '/teaana-products',
+		name: 'storedproducts',
+		component: StoredProducts,
+	},
+	{
+		path: '/teaana-supplies',
+		name: 'storedsupplies',
+		component: StoredSupplies,
+	},
+	{
+		path: '/teaana-accounts',
+		name: 'accountregistered',
+		component: AccountRegistered,
 	},
 
 ];
