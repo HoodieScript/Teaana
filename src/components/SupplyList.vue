@@ -135,20 +135,6 @@
 
                 <div class="col-lg-5">
                   <div class="form-group">
-                    <select
-                      class="form-control custom-select mb-2"
-                      v-for="item in addorders.options"
-                      :key="item"
-                    >
-                      <option selected>{{ item.name }}</option>
-                      <option
-                        v-for="valitem in item.values"
-                        :key="valitem"
-                        value="valitem.price"
-                      >
-                        {{ valitem.name }}
-                      </option>
-                    </select>
                     <input
                       type="number"
                       class="form-control"
@@ -156,29 +142,6 @@
                       min="1"
                       v-model="quantity"
                     />
-                  </div>
-
-                  <div
-                    class="input-group"
-                    v-for="addon in addorders.addons"
-                    :key="addon"
-                  >
-                    <div class="input-group-prepend">
-                      <div class="input-group-text bg-transparent border-0">
-                        <input
-                          type="checkbox"
-                          aria-label="Checkbox for following text input "
-                          value="addon.price"
-                        />
-                      </div>
-                    </div>
-                    <input
-                      type="text"
-                      class="form-control border-0"
-                      aria-label="Text input with checkbox "
-                      v-model="addon.name"
-                    />
-                    <small class="my-auto"> ₱ {{ addon.price }}</small>
                   </div>
 
                   <hr />
@@ -221,24 +184,18 @@ export default {
     return {
       quantity: 1,
       addorders: [],
-      addonstotal: [],
       total: null,
-      subtotal: [],
-      //v-model for filters
-      movetocartbtn: false,
-
+      price: null,
       search: "",
       category: null,
       type: null,
       sort: null,
-      products: [],
+      supplies: [],
+
       pagination: [],
 
       //File Path
       path: "https://api.tea-ana.com/uploads/",
-
-      //API URL
-      url: "https://api.tea-ana.com/v1/products", //http://api.tea-ana.com/v1/products/product.id
 
       query: null,
       queryData: null,
@@ -265,17 +222,17 @@ export default {
   },
 
   methods: {
-    async getProducts() {
+    async getSupplies() {
       let response = await axios.get(
-        "https://api.tea-ana.com/v1/supplies" //endpoint
+        `https://api.tea-ana.com/v1/supplies` //endpoint
       );
-      this.products = response.data.data;
-      console.log(this.products);
+      this.supplies = response.data.data;
+      console.log(this.supplies);
     },
 
     async orderProduct(id) {
       axios
-        .get(`https://api.tea-ana.com/v1/products/` + id)
+        .get(`https://api.tea-ana.com/v1/supplies/` + id)
         .then((response) => {
           this.addorders = response.data.data;
         });
@@ -284,33 +241,33 @@ export default {
   },
   async created() {
     // fetch the data pag ka load
-    this.getProducts();
+    this.getSupplies();
   },
   computed: {
     filter() {
       //variable where to store filtered data
       let data = {};
 
-      //returns all products if values are null
+      //returns all supplies if values are null
       if (
         this.search == null ||
         (this.search == "" && this.category == null && this.type == null)
       ) {
         if (this.sort == "desc") {
-          return this.products.slice().sort((a, b) => {
+          return this.supplies.slice().sort((a, b) => {
             return b.price - a.price;
           });
         }
         if (this.sort == "asc") {
-          return this.products.slice().sort((a, b) => {
+          return this.supplies.slice().sort((a, b) => {
             return a.price - b.price;
           });
         }
-        return this.products;
+        return this.supplies;
       }
 
       //Filter for search
-      data = this.products.filter((el) => {
+      data = this.supplies.filter((el) => {
         if (this.search != null && this.search != "") {
           console.log(1);
           return el.name.match(new RegExp(`${this.search}`, "gi"));
@@ -342,12 +299,8 @@ export default {
       //returns filted data
       return data;
     },
-
-    TotalValue: function () {
+    TotalValue() {
       let tot = this.addorders.price * this.quantity;
-      this.products.reduce(function (tot, addon, valitem) {
-        return parseInt(tot) + parseInt(addon.price) + parseInt(valitem.price);
-      });
       return tot;
     },
   },

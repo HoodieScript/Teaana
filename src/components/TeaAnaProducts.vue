@@ -63,7 +63,12 @@
               <div class="form-group text-left">
                 <small class="pb-3">Product Name</small>
 
-                <input type="text" class="form-control" v-model="name" />
+                <input
+                  type="text"
+                  class="form-control"
+                  :required="true"
+                  v-model="name"
+                />
               </div>
 
               <div class="form-group text-left">
@@ -168,6 +173,7 @@
                 <select
                   class="form-control custom-select"
                   v-model="eachofprods.category_id"
+                  @change="onChange"
                 >
                   <option
                     v-for="(category, idx) in categories"
@@ -184,10 +190,9 @@
                 <select
                   class="form-control custom-select"
                   v-model="eachofprods.productType"
-                  @change="watchSelectedItemI"
+                  @change="this.onChange"
                   required
                 >
-                  <option selected disabled>--- select type ---</option>
                   <!-- 
                   <option
                     v-for="prodtype in products"
@@ -283,11 +288,17 @@ export default {
       productType: null,
     };
   },
+
   methods: {
-    watchSelectedItemId: function (e) {
-      if (e.target.options.selectedIndex > -1) {
-        console.log(e.target.options[e.target.options.selectedIndex].value);
-      }
+    onChange(event) {
+      console.log(event.target.value);
+    },
+    watchSelectedItemId: function (event) {
+      console.log(
+        event.target.options[event.target.selectedIndex].attributes[
+          "data-item-type"
+        ].value
+      );
     },
     handleInput(e) {
       this.val = e.target.value.replace(/[^\d]/g, "");

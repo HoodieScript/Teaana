@@ -180,31 +180,30 @@
               <div class="form-group text-left">
                 <small class="pb-3">Supply type</small>
                 <select
-                  @change="watchSelectedItemId($event)"
-                  v-model="eachofsupp.categoryId"
+                  v-model.number="eachofsupp.categoryId"
+                  @change="onChange"
                   class="form-control custom-select"
                   required
                 >
-                  <option selected disabled>--- select type ---</option>
-
-                  <option data-item-type="categ" value="1">1</option>
-                  <option data-item-type="categ" value="2">2</option>
+                  <!--                   <option selected disabled>--- select type ---</option>
+ -->
+                  <option value="1">1</option>
+                  <option value="2">2</option>
                 </select>
               </div>
               <div class="form-group text-left">
                 <small class="pb-3">Supply type</small>
+                <!-- @change="watchSelectedItemId($event)" -->
                 <select
-                  @change="watchSelectedItemId($event)"
                   v-model="eachofsupp.type"
+                  @change="onChange"
                   class="form-control custom-select"
                   required
                 >
                   <option selected disabled>--- select type ---</option>
 
-                  <option data-item-type="type" value="Retail">Retail</option>
-                  <option data-item-type="type" value="Wholesale">
-                    Wholesale
-                  </option>
+                  <option value="Retail">Retail</option>
+                  <option value="Wholesale">Wholesale</option>
                 </select>
               </div>
               <div class="form-group">
@@ -292,13 +291,16 @@ export default {
     };
   },
   methods: {
-    watchSelectedItemId: function (event) {
+    onChange(event) {
+      console.log(event.target.value);
+    },
+    /*    watchSelectedItemId: function (event) {
       console.log(
         event.target.options[event.target.selectedIndex].attributes[
           "data-item-type"
         ].value
       );
-    },
+    }, */
 
     handleInput(e) {
       this.val = e.target.value.replace(/[^\d]/g, "");
