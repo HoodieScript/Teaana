@@ -92,6 +92,7 @@ export default {
       email: "",
       password: "",
       url: "https://api.tea-ana.com/v1/auth",
+      account: "",
     };
   },
   methods: {
@@ -106,6 +107,14 @@ export default {
           { withCredentials: true }
         );
         console.log(res);
+      } catch (error) {
+        console.error(error);
+      }
+    },
+    getProfile: async function () {
+      try {
+        const res = await axios.get("https://api.tea-ana.com/v1/auth/profile");
+        this.account = res.data.data;
       } catch (error) {
         console.error(error);
       }

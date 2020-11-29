@@ -226,13 +226,15 @@ import axios from "axios";
 axios.defaults.withCredentials = true;
 export default {
   data() {
-    return {};
+    return {
+      account: "",
+    };
   },
   methods: {
     getProfile: async function () {
       try {
         const res = await axios.get("https://api.tea-ana.com/v1/auth/profile");
-        this.data = res.data;
+        this.account = res.data;
       } catch (error) {
         console.error(error);
       }

@@ -58,7 +58,7 @@
               class="img img-fluid w-75 m-auto border-0 form-control"
               alt="Tea-ana-product"
               style="height: auto"
-              :src="path + `1601472795874-milktea1.png`"
+              :src="path + product.imagePath"
               fluid
             />
 
@@ -127,7 +127,6 @@
                       class="img img-fluid w-75 m-auto border-0 form-control"
                       alt="Tea-ana-product"
                       style="height: auto"
-                      :src="path + `1601472795874-milktea1.png`"
                       fluid
                     />
                   </figure>
@@ -168,7 +167,7 @@
                         <input
                           type="checkbox"
                           aria-label="Checkbox for following text input "
-                          value="addon.price"
+                          v-model.number="addon.price"
                         />
                       </div>
                     </div>
@@ -195,7 +194,7 @@
                     />
                   </div>
 
-                  <small>Price varies on selected order </small>
+                  <small>Price varies on selected order {{ SumAddons }}</small>
                   <div class="input-group mt-3">
                     <input
                       type="submit"
@@ -221,24 +220,24 @@ export default {
     return {
       quantity: 1,
       addorders: [],
-      addonstotal: [],
       total: null,
       subtotal: [],
       //v-model for filters
       movetocartbtn: false,
-
+      addons: [],
       search: "",
       category: null,
       type: null,
       sort: null,
       products: [],
+      imagePath: null,
       pagination: [],
 
       //File Path
       path: "https://api.tea-ana.com/uploads/",
 
       //API URL
-      url: "https://api.tea-ana.com/v1/products", //http://api.tea-ana.com/v1/products/product.id
+      url: "https://api.tea-ana.com/v1/products",
 
       query: null,
       queryData: null,
@@ -342,13 +341,14 @@ export default {
       //returns filted data
       return data;
     },
-
     TotalValue: function () {
-      let tot = this.addorders.price * this.quantity;
-      this.products.reduce(function (tot, addon, valitem) {
-        return parseInt(tot) + parseInt(addon.price) + parseInt(valitem.price);
-      });
-      return tot;
+      let total = this.addorders.price * this.quantity;
+      return total;
+    },
+    SumAddons() {
+      return this.addons.reduce((acc, addon) => {
+        return acc + parseInt(addon.price);
+      }, 0);
     },
   },
 };

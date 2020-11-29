@@ -26,7 +26,8 @@
               ></span>
             </div>
             <input
-              type="text"
+              type="search"
+              v-model="search"
               class="form-control"
               required
               placeholder="search"
@@ -79,21 +80,23 @@
                   type="number"
                   class="form-control"
                   v-model.number="price"
-                  @input="handleInput"
                 />
               </div>
 
               <div class="form-group text-left">
-                <small class="pb-3">Suppy Category</small>
+                <small class="pb-3">Addon Category</small>
                 <select
                   class="form-control custom-select"
                   required
                   v-model.number="category_id"
                 >
-                  <option value="1">1</option>
-                  <option value="2">2</option>
-                  <option value="3">3</option>
-                  <option value="4">4</option>
+                  <option
+                    v-for="(category, idx) in categories"
+                    :value="category.id"
+                    v-bind:key="idx"
+                  >
+                    {{ category.id }} - {{ category.name }}
+                  </option>
                 </select>
               </div>
 
@@ -153,7 +156,6 @@
                   class="form-control"
                   v-model.number="eachofaddon.price"
                   required
-                  @input="handleInput"
                 />
               </div>
               <div class="form-group text-left">
@@ -166,10 +168,13 @@
                 >
                   <!--                   <option selected disabled>--- select type ---</option>
  -->
-                  <option value="1">1</option>
-                  <option value="2">2</option>
-                  <option value="3">3</option>
-                  <option value="4">4</option>
+                  <option
+                    v-for="(category, idx) in categories"
+                    :value="category.id"
+                    v-bind:key="idx"
+                  >
+                    {{ category.id }} - {{ category.name }}
+                  </option>
                 </select>
               </div>
 
@@ -249,7 +254,8 @@ export default {
       price: null,
       category_id: null,
       val: null,
-      type: null,
+      search: null,
+      categories: [],
     };
   },
   methods: {
@@ -257,9 +263,6 @@ export default {
       console.log(event.target.value);
     },
 
-    handleInput(e) {
-      this.val = e.target.value.replace(/[^\d]/g, "");
-    },
     /* fetch */
     async getAddons() {
       let response = await axios.get(
@@ -326,11 +329,20 @@ export default {
           console.error(err);
         });
     },
+    async getCategory() {
+      let response = await axios.get(
+        "https://api.tea-ana.com/v1/categories" //endpoint
+      );
+
+      this.categories = response.data.data;
+      console.log(this.categories);
+    },
   },
   computed: {},
   async created() {
     // fetch the data pag ka load
     this.getAddons();
+    this.getCategory();
   },
 };
 </script>

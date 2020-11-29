@@ -93,7 +93,7 @@
                     :value="category.id"
                     v-bind:key="idx"
                   >
-                    {{ category.name }}
+                    {{ category.id }} -{{ category.name }}
                   </option>
                 </select>
               </div>
@@ -180,7 +180,7 @@
                     v-bind:key="idx"
                     :value="category.id"
                   >
-                    {{ category.name }}
+                    {{ category.id }} - {{ category.name }}
                   </option>
                 </select>
               </div>
@@ -193,14 +193,6 @@
                   @change="this.onChange"
                   required
                 >
-                  <!-- 
-                  <option
-                    v-for="prodtype in products"
-                    :key="prodtype.productType"
-                    value="prodtype.productType"
-                  >
-                    {{ prodtype.productType }}
-                  </option> -->
                   <option value="New">New</option>
                   <option value="Featured">Featured</option>
                   <option value="Best-Selling">Best-Selling</option>
@@ -286,6 +278,7 @@ export default {
       category_id: null,
       val: null,
       productType: null,
+      path: "https://api.tea-ana.com/uploads/",
     };
   },
 
@@ -293,6 +286,7 @@ export default {
     onChange(event) {
       console.log(event.target.value);
     },
+
     watchSelectedItemId: function (event) {
       console.log(
         event.target.options[event.target.selectedIndex].attributes[

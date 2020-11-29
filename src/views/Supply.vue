@@ -1,6 +1,6 @@
 <template>
   <div>
-    <Navbar />
+    <Navbar2 />
     <Login />
     <Register />
     <Supply />
@@ -12,7 +12,7 @@
   </div>
 </template>
 <script>
-import Navbar from "@/components/NavBar.vue";
+import Navbar2 from "@/components/NavBar2.vue";
 import Login from "@/components/Login.vue";
 import Register from "@/components/Register.vue";
 import Supply from "@/components/SupplyList.vue";
@@ -45,7 +45,7 @@ export default {
     });
   },
   components: {
-    Navbar,
+    Navbar2,
     Supply,
     Login,
     Register,

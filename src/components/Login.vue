@@ -105,9 +105,10 @@ export default {
         console.error(error);
       }
     },
+
     async getProfile() {
       let response = await axios.get(
-        "https://api.tea-ana.com/v1/auth/profile" //endpoint
+        `https://api.tea-ana.com/v1/auth/profile` //endpoint
       );
       this.account = response.data.data;
       console.log(this.account);

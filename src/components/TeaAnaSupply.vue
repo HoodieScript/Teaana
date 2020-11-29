@@ -61,7 +61,7 @@
           </div>
           <div class="modal-body">
             <form>
-              <!--   <div class="form-group text-left">
+              <!-- <div class="form-group text-left">
                 <small class="pb-3">Image File</small>
 
                 <input
@@ -158,6 +158,15 @@
           </div>
           <div class="modal-body">
             <form>
+              <div class="form-group">
+                <img
+                  class="img img-fluid w-75 m-auto border-0 form-control"
+                  alt="Tea-ana-product"
+                  style="height: auto"
+                  :src="path + eachofsupp.imagePath"
+                  fluid
+                />
+              </div>
               <div class="form-group text-left">
                 <small class="pb-3">Supply Name</small>
                 <input
@@ -235,7 +244,15 @@
         </thead>
         <tbody id="#myTable" v-for="(supply, idx) in supplies" v-bind:key="idx">
           <tr>
-            <td>{{ supply.imagePath }}</td>
+            <td>
+              <img
+                class="img img-fluid w-75 m-auto border-0 form-control"
+                alt="Tea-ana-product"
+                style="height: auto"
+                :src="path + supply.imagePath"
+                fluid
+              />
+            </td>
             <td>{{ supply.name }}</td>
             <td>{{ supply.price }}</td>
             <td>{{ supply.categoryId }}</td>
@@ -279,7 +296,6 @@ import $ from "jquery";
 export default {
   data() {
     return {
-      categories: [],
       supplies: [],
       eachofsupp: [],
       name: null,
@@ -288,6 +304,8 @@ export default {
       categoryId: null,
       val: null,
       type: null,
+      path: "https://api.tea-ana.com/uploads/",
+      selectedFile: null,
     };
   },
   methods: {
@@ -305,14 +323,7 @@ export default {
     handleInput(e) {
       this.val = e.target.value.replace(/[^\d]/g, "");
     },
-    async getCategory() {
-      let response = await axios.get(
-        "https://api.tea-ana.com/v1/categories" //endpoint
-      );
 
-      this.categories = response.data.data;
-      console.log(this.categories);
-    },
     /* fetch */
     async getSupplies() {
       let response = await axios.get(
@@ -331,25 +342,20 @@ export default {
       console.log(this.eachofsupp);
     },
     /* insert */
-    onFileSelected(event) {
+    /* onFileSelected(event) {
       this.imagePath = event.target.files[0];
-    },
+    }, */
     insertSupply: async function () {
-      /*     const fd = new FormData();
-      fd.append("image", this.imagePath, this.imagePath.name); */
+      /*   const fd = new FormData();
+      fd.append("image", this.imagePath, this.imagePath);
+    axios
+        .post(
+          "https://api.tea-ana.com/v1/supplies",
+        )
+       */
       axios
         .post(
           "https://api.tea-ana.com/v1/supplies",
-          /*       fd,
-          {
-            onUploadProgress: (uploadEvent) => {
-              console.log(
-                "upload progress" +
-                  Math.round((uploadEvent.loaded / uploadEvent.total) * 100) +
-                  "%"
-              );
-            },
-          }, */
 
           {
             name: this.name,
@@ -401,7 +407,6 @@ export default {
   computed: {},
   async created() {
     // fetch the data pag ka load
-    this.getCategory();
     this.getSupplies();
   },
 };

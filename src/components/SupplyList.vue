@@ -41,8 +41,8 @@
 
       <div class="row d-flex pt-5 pb-5 justify-content-center">
         <div
-          v-for="product in filter"
-          :key="product.id"
+          v-for="supply in filter"
+          :key="supply.id"
           img-alt="Image"
           img-top
           tag="article"
@@ -51,20 +51,20 @@
         >
           <label
             class="card-title p-3 text-dark text-left form-control border-0 font-weight-bold"
-            >{{ product.name }}</label
+            >{{ supply.name }}</label
           >
           <div class="card-body">
             <img
               class="img img-fluid w-75 m-auto border-0 form-control"
               alt="Tea-ana-product"
               style="height: auto"
-              :src="path + `1601472795874-milktea1.png`"
+              :src="path + supply.imagePath"
               fluid
             />
 
             <div class="order form-control border-0">
               <label class="text-dark float-left align-self-center">
-                ₱{{ product.price }}
+                ₱{{ supply.price }}
               </label>
               <button
                 id="show-btn"
@@ -72,7 +72,7 @@
                 data-target="#product-cart"
                 class="align-self-center float-right p-0 btn btn-md"
                 style="color: #5cd85c"
-                @click="orderProduct(product.id)"
+                @click="orderProduct(supply.id)"
               >
                 <i class="fas fa-shopping-cart"></i>
               </button>
@@ -127,7 +127,7 @@
                       class="img img-fluid w-75 m-auto border-0 form-control"
                       alt="Tea-ana-product"
                       style="height: auto"
-                      :src="path + `1601472795874-milktea1.png`"
+                      :src="path + addorders.imagePath"
                       fluid
                     />
                   </figure>
@@ -161,10 +161,11 @@
                   <small>Price varies on selected order </small>
                   <div class="input-group mt-3">
                     <input
-                      type="submit"
+                      type="button"
                       value="Add to cart"
                       class="mx-auto w-50 btn btn-sm text-white"
                       style="background-color: #028476"
+                      @click="insertOrder()"
                     />
                   </div>
                 </div>
@@ -178,7 +179,8 @@
 </template>
 <script>
 import axios from "axios";
-
+import swal from "sweetalert";
+import $ from "jquery";
 export default {
   data() {
     return {
@@ -196,6 +198,7 @@ export default {
 
       //File Path
       path: "https://api.tea-ana.com/uploads/",
+      imagePath: null,
 
       query: null,
       queryData: null,
@@ -237,6 +240,23 @@ export default {
           this.addorders = response.data.data;
         });
       console.log(this.addorders);
+    },
+    insertOrder: async function () {
+      axios
+        .post("https://api.tea-ana.com/v1/cart/supplies", {
+          name: this.addorders.name,
+          price: this.addorders.price,
+          quantity: this.quantity,
+          type: this.type,
+        })
+        .then((response) => {
+          console.log(response);
+          $("#newSupplies").modal("hide");
+          swal("Record Created!", "New changes are applied!", "success");
+        })
+        .catch((error) => {
+          console.log(error.response);
+        });
     },
   },
   async created() {

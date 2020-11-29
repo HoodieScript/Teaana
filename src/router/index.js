@@ -14,6 +14,8 @@ import StoredProducts from "../views/StoredProducts.vue"
 import AccountRegistered from "../views/AccountRegistered.vue"
 import StoredSupplies from "../views/StoredSupply.vue"
 import StoredAddons from "../views/StoredAddons.vue"
+import StoredCart from "../views/StoredCartSupply.vue"
+
 
 Vue.use(VueRouter);
 
@@ -83,6 +85,11 @@ const routes = [
 		path: '/teaana-addons',
 		name: 'storedaddons',
 		component: StoredAddons,
+	},
+	{
+		path: '/supply-cart',
+		name: 'storedcart',
+		component: StoredCart,
 	},
 	{
 		path: '/teaana-accounts',

@@ -25,7 +25,7 @@
           </a>
         </li>
 
-        <li class="nav-item">
+        <li class="nav-item" v-if="data == null">
           <button
             type="button"
             class="btn btn-sm m-1 text-white"
@@ -36,7 +36,7 @@
             Login
           </button>
         </li>
-        <li class="nav-item">
+        <li class="nav-item" v-if="data == null">
           <button
             type="button"
             class="btn btn-sm m-1 text-white"
@@ -77,33 +77,9 @@
         <li class="nav-item">
           <a class="nav-link"
             ><router-link to="/" v-scroll-to="'#banner-section'">
-              Home
+              Supply shop
             </router-link></a
           >
-        </li>
-        <li class="nav-item">
-          <a class="nav-link"
-            ><router-link to="/" v-scroll-to="'#product-section'">
-              Product
-            </router-link></a
-          >
-        </li>
-        <li class="nav-item">
-          <a class="nav-link"
-            ><router-link to="/" v-scroll-to="'#about-section'">
-              About
-            </router-link></a
-          >
-        </li>
-        <li class="nav-item">
-          <a class="nav-link"
-            ><router-link to="/" v-scroll-to="'#contact-section'">
-              Contact
-            </router-link></a
-          >
-        </li>
-        <li class="nav-item">
-          <a class="nav-link mr-2" v-bind:href="shoplink"> Store </a>
         </li>
       </ul>
     </div>
@@ -118,19 +94,19 @@ axios.defaults.withCredentials = true;
 export default {
   data() {
     return {
-      homelink: "/",
+      homelink: "/supply",
       shoplink: "/store",
       cartlink: "/cart",
       profilelink: "/profile",
       logoutlink: "/",
-      account: null,
+      data: null,
     };
   },
   methods: {
     getProfile: async function () {
       try {
         const res = await axios.get(`https://api.tea-ana.com/v1/auth/profile`);
-        this.account = res.data.data;
+        this.data = res.data;
       } catch (error) {
         console.error(error);
       }
