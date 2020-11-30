@@ -86,14 +86,14 @@ export default {
       account: "",
       email: "",
       password: "",
-      url: "https://api.tea-ana.com/v1/auth",
+      url: "https://api.tea-ana.com/v1/auth/",
     };
   },
   methods: {
     login: async function () {
       try {
         const res = await axios.get(
-          this.url + "/users",
+          this.url + "users",
           {
             email: this.email,
             password: this.password,
@@ -105,17 +105,6 @@ export default {
         console.error(error);
       }
     },
-
-    async getProfile() {
-      let response = await axios.get(
-        `https://api.tea-ana.com/v1/auth/profile` //endpoint
-      );
-      this.account = response.data.data;
-      console.log(this.account);
-    },
-  },
-  mounted() {
-    this.getProfile();
   },
 };
 </script>

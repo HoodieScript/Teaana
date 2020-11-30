@@ -19,7 +19,7 @@
               New Products
             </button>
           </div>
-          <div class="input-group">
+          <!-- <div class="input-group">
             <div class="input-group-prepend">
               <span class="input-group-text" id="basic-addon1"
                 ><i class="fas fa-search"></i
@@ -32,7 +32,7 @@
               aria-label="search"
               aria-describedby="basic-addon1"
             />
-          </div>
+          </div> -->
         </div>
       </div>
     </div>
