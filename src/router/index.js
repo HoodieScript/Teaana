@@ -2,7 +2,7 @@ import Vue from 'vue';
 import VueRouter from 'vue-router';
 import Home from '../views/Home.vue';
 import Supply from '../views/Supply.vue';
-import Profile from '../views/Account.vue';
+import Accountsupp from '../views/Accountsupp.vue';
 import Product from '../views/Shop.vue';
 import Cart from '../views/Cart.vue';
 import Gallery from "../components/Gallery.vue"
@@ -11,7 +11,7 @@ import Landing from "../components/Landing.vue"
 import Login from "../views/Login.vue"
 import Customer from "../views/Customer.vue"
 import StoredProducts from "../views/StoredProducts.vue"
-import AccountRegistered from "../views/AccountRegistered.vue"
+import StoredCustomers from "../views/StoredCustomers.vue"
 import StoredSupplies from "../views/StoredSupply.vue"
 import StoredAddons from "../views/StoredAddons.vue"
 import StoredCart from "../views/StoredCartSupply.vue"
@@ -44,7 +44,7 @@ const routes = [
 	{
 		path: '/profile',
 		name: 'profile',
-		component: Profile,
+		component: Accountsupp,
 	},
 	{
 		path: '/store',
@@ -92,9 +92,9 @@ const routes = [
 		component: StoredCart,
 	},
 	{
-		path: '/teaana-accounts',
+		path: '/teaana-customer',
 		name: 'accountregistered',
-		component: AccountRegistered,
+		component: StoredCustomers,
 	},
 
 

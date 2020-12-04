@@ -1,10 +1,10 @@
 <template>
   <section class="row p-0 container-fluid">
     <div class="profile-info col-lg-3">
-      <div class="p-5">
-        <form>
+      <div class="p-5" v-if="account != null">
+        <div v-for="user in account" :key="user">
           <p class="text-center font-weight-bold">Account</p>
-          <div class="form-group row">
+          <div class="form-group">
             <input
               type="email"
               class="form-control"
@@ -12,7 +12,7 @@
               placeholder="Email Address"
             />
           </div>
-          <div class="form-group row">
+          <div class="form-group">
             <input
               type="password"
               class="form-control"
@@ -20,7 +20,7 @@
               placeholder="Password"
             />
           </div>
-          <div class="form-group row">
+          <div class="form-group">
             <input
               type="number"
               class="form-control"
@@ -28,7 +28,7 @@
               placeholder="Contact Number"
             />
           </div>
-        </form>
+        </div>
         <div class="float-right">
           <button
             class="btn btn-sm text-white pl-3 pr-3"
@@ -70,7 +70,7 @@
 
       <div class="tab-content">
         <div class="tab-pane table-responsive p-0 active" id="firsttab">
-          <div class="scrollable overflow-auto">
+          <!--    <div class="scrollable overflow-auto">
             <table class="table sticky table-borderless text-center">
               <thead class="col-lg-12">
                 <tr>
@@ -118,11 +118,11 @@
                 </tr>
               </tbody>
             </table>
-          </div>
+          </div> -->
         </div>
 
         <div class="tab-pane fade table-responsive p-0" id="secondtab">
-          <div class="scrollable overflow-auto">
+          <!--     <div class="scrollable overflow-auto">
             <table class="table sticky table-borderless text-center">
               <thead>
                 <tr>
@@ -169,7 +169,7 @@
                 </tr>
               </tbody>
             </table>
-          </div>
+          </div> -->
         </div>
       </div>
     </div>
@@ -227,14 +227,18 @@ axios.defaults.withCredentials = true;
 export default {
   data() {
     return {
-      account: "",
+      account: null,
     };
   },
   methods: {
     getProfile: async function () {
+      axios.defaults.withCredentials = true;
+
       try {
-        const res = await axios.get("https://api.tea-ana.com/v1/auth/profile");
-        this.account = res.data;
+        const res = await axios.get("https://api.tea-ana.com/v1/auth/profile", {
+          withCredentials: true,
+        });
+        this.account = res.data.data;
       } catch (error) {
         console.error(error);
       }

@@ -1,10 +1,10 @@
-<template>
+<template v-if="userIsLoggedIn">
   <div class="container-fluid p-0">
     <div class="row vh-100">
       <div
-        class="col-lg-4 x d-flex justify-content-center h-100 align-items-center"
+        class="col-lg-4 x d-flex justify-content-center h-100 align-items-center form-login"
       >
-        <form class="w-75 p-5" @submit.prevent="onSubmit">
+        <form class="w-75 p-5">
           <div class="form-header mb-5">
             <h4>Sign in your Account</h4>
           </div>
@@ -27,16 +27,13 @@
               required
               v-model="password"
             />
-            <!-- <small class="d-flex justify-content-end">
-                <a class="text-secondary">forgot password?</a></small
-              > -->
           </div>
 
           <button
-            type="submit"
+            type="button"
             class="float-right btn btn-sm pl-3 pr-3 text-white"
             style="background-color: #028476"
-            @click="login()"
+            @click="adminlogin()"
           >
             Login
           </button>
@@ -85,39 +82,44 @@
 </style>
 <script>
 import axios from "axios";
+import swal from "sweetalert";
+import $ from "jquery";
 axios.defaults.withCredentials = true;
 export default {
   data() {
     return {
       email: "",
       password: "",
-      url: "https://api.tea-ana.com/v1/auth",
-      account: "",
     };
   },
   methods: {
-    login: async function () {
-      try {
-        const res = await axios.post(
-          this.url + "/login",
+    adminlogin: async function () {
+      axios
+        .post(
+          "https://api.tea-ana.com/v1/auth/login/cms",
           {
             email: this.email,
             password: this.password,
           },
           { withCredentials: true }
-        );
-        console.log(res);
-      } catch (error) {
-        console.error(error);
-      }
+        )
+        .then((response) => {
+          console.log(response.data.data);
+          $("#Registermodal").modal("hide");
+          swal(
+            "Account Signed-in!",
+            "You can now access admin panel!",
+            "success"
+          );
+        })
+        .catch((error) => {
+          console.log(error.response);
+        });
     },
-    getProfile: async function () {
-      try {
-        const res = await axios.get("https://api.tea-ana.com/v1/auth/profile");
-        this.account = res.data.data;
-      } catch (error) {
-        console.error(error);
-      }
+    computed: {
+      userIsLoggedIn: function () {
+        return this.$store.state.loggedIn;
+      },
     },
   },
 };

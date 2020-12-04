@@ -25,7 +25,7 @@
           </a>
         </li>
 
-        <li class="nav-item" v-if="data == null">
+        <li class="nav-item" v-if="account == null">
           <button
             type="button"
             class="btn btn-sm m-1 text-white"
@@ -36,7 +36,7 @@
             Login
           </button>
         </li>
-        <li class="nav-item" v-if="data == null">
+        <li class="nav-item" v-if="account == null">
           <button
             type="button"
             class="btn btn-sm m-1 text-white"
@@ -48,15 +48,15 @@
           </button>
         </li>
 
-        <li class="nav-item dropdown show" v-if="data != null">
+        <li class="nav-item dropdown show" v-if="account != null">
           <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown">
-            {{ data.user.email }}</a
+            {{ account.user.name }}</a
           >
           <div class="dropdown-menu" aria-labelledby="dropdownMenuButton ">
             <a class="dropdown-item p-2" :href="profilelink">Profile</a>
-            <a class="dropdown-item p-2" :href="logoutlink" @click="logout()"
-              >Log out</a
-            >
+            <button class="dropdown-item p-2" type="button" @click="logout()">
+              Log out
+            </button>
           </div>
         </li>
       </ul>
@@ -96,17 +96,19 @@ export default {
     return {
       homelink: "/supply",
       shoplink: "/store",
-      cartlink: "/cart",
+      cartlink: "/supply-cart",
       profilelink: "/profile",
-      logoutlink: "/",
-      data: null,
+      logoutlink: "/supply",
+      account: null,
     };
   },
   methods: {
     getProfile: async function () {
       try {
-        const res = await axios.get(`https://api.tea-ana.com/v1/auth/profile`);
-        this.data = res.data;
+        const res = await axios.get("https://api.tea-ana.com/v1/auth/profile", {
+          withCredentials: true,
+        });
+        this.account = res.data;
       } catch (error) {
         console.error(error);
       }
@@ -124,26 +126,6 @@ export default {
   },
   mounted() {
     this.getProfile();
-
-    /*  function smooth_scroll_to(elem) {
-      var offset = 1500;
-
-      offset = $(elem).offset().top - 60;
-
-      $("html, body").animate(
-        {
-          scrollTop: offset,
-        },
-        500,
-        "swing"
-      );
-    }
-
-    $(".nav ul li a").click(function (e) {
-      e.preventDefault();
-      var elem = $(this).attr("href");
-      smooth_scroll_to(elem);
-    }); */
   },
 };
 </script>

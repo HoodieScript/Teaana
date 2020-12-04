@@ -54,7 +54,7 @@
             </div>
 
             <button
-              type="submit"
+              type="button"
               class="float-right btn btn-sm pl-3 pr-3 text-white"
               style="background-color: #028476"
               @click="login()"
@@ -79,11 +79,12 @@
 
 <script>
 import axios from "axios";
+import swal from "sweetalert";
+import $ from "jquery";
 axios.defaults.withCredentials = true;
 export default {
   data() {
     return {
-      account: "",
       email: "",
       password: "",
       url: "https://api.tea-ana.com/v1/auth/",
@@ -91,19 +92,23 @@ export default {
   },
   methods: {
     login: async function () {
-      try {
-        const res = await axios.get(
-          this.url + "users",
+      axios
+        .post(
+          "https://api.tea-ana.com/v1/auth/login",
           {
             email: this.email,
             password: this.password,
           },
           { withCredentials: true }
-        );
-        console.log(res);
-      } catch (error) {
-        console.error(error);
-      }
+        )
+        .then((response) => {
+          console.log(response.data.data);
+          $("#Loginmodal").modal("hide");
+          swal("Account Signed-in!", "You can now order products!", "success");
+        })
+        .catch((error) => {
+          console.log(error.response);
+        });
     },
   },
 };

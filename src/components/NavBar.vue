@@ -127,14 +127,16 @@ export default {
     };
   },
   methods: {
-    async getProfile() {
-      let response = await axios.get(
-        `https://api.tea-ana.com/v1/auth/profile` //endpoint
-      );
-      this.account = response.data.data;
-      console.log(this.account);
+    getProfile: async function () {
+      try {
+        const res = await axios.get("https://api.tea-ana.com/v1/auth/profile", {
+          withCredentials: true,
+        });
+        this.account = res.data.data;
+      } catch (error) {
+        console.error(error);
+      }
     },
-
     logout: async function () {
       try {
         const res = await axios.get("https://api.tea-ana.com/v1/auth/logout", {

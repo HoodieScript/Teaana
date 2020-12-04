@@ -12,6 +12,9 @@
         >
           <router-link to="/teaana-customer">Customer</router-link></a
         >
+        <a class="list-group-item list-group-item-action bg-transparent">
+          <router-link to="/teaana-orders">Orders</router-link></a
+        >
 
         <a class="list-group-item list-group-item-action bg-transparent">
           <router-link to="/teaana-products">Products</router-link></a
@@ -56,17 +59,33 @@
         </div>
       </nav>
 
-      <main class="container"><TeaAnaUsers /></main>
+      <main class="container"><TeaAnaCustomers /></main>
     </div>
   </div>
 </template>
 
 <script>
+import axios from "axios";
 import $ from "jquery";
-import TeaAnaUsers from "../components/TeaAnaUsers.vue";
+import TeaAnaCustomers from "../components/TeaAnaCustomers.vue";
 export default {
   components: {
-    TeaAnaUsers,
+    TeaAnaCustomers,
+  },
+  methods: {
+    logout: async function () {
+      try {
+        const res = await axios.get(
+          "https://api.tea-ana.com/v1/auth/logout/cms",
+          {
+            withCredentials: true,
+          }
+        );
+        console.log(res);
+      } catch (error) {
+        console.error(error);
+      }
+    },
   },
   mounted() {
     $("#menu-toggle").click(function (e) {

@@ -10,19 +10,15 @@
       </h1>
     </div>
     <div class="container min-vh-100">
-      {{ category }} {{ search }} {{ type }} {{ sort }}
+      <!--       {{ category }} {{ search }} {{ type }} {{ sort }}
+ -->
       <div class="w-100 filters">
         <b-form-input
           v-model="search"
-          placeholder="ex. Oreo, Thai"
+          placeholder="ex. Shaker, Jiggler"
           class="col-2 m-1 d-inline fill"
         >
         </b-form-input>
-        <b-form-select
-          v-model="category"
-          :options="options1"
-          class="col-2 m-1 d-inline fill"
-        ></b-form-select>
 
         <b-form-select
           v-model="type"
@@ -111,6 +107,7 @@
               <form class="row">
                 <div class="col-lg-7 border-right">
                   <div class="input-group">
+                    <input type="hidden" v-model="addorders.id" />
                     <input
                       type="text"
                       readonly
@@ -127,7 +124,7 @@
                       class="img img-fluid w-75 m-auto border-0 form-control"
                       alt="Tea-ana-product"
                       style="height: auto"
-                      :src="path + addorders.imagePath"
+                      :src="path + imagePath"
                       fluid
                     />
                   </figure>
@@ -137,24 +134,24 @@
                   <div class="form-group">
                     <input
                       type="number"
-                      class="form-control"
+                      class="form-control text-center"
                       placeholder="Select Quantity"
                       min="1"
-                      v-model="quantity"
+                      v-model.number="quantity"
                     />
                   </div>
 
                   <hr />
                   <div class="input-group">
                     <input
-                      type="text"
+                      type="number"
                       readonly
                       class="form-control text-center bg-white font-weight-bold"
                       style="color: #028476"
                       placeholder="Price"
                       aria-label="Price"
                       aria-describedby="basic-addon1"
-                      v-model="TotalValue"
+                      v-model.number="TotalValue"
                     />
                   </div>
 
@@ -184,37 +181,32 @@ import $ from "jquery";
 export default {
   data() {
     return {
-      quantity: 1,
       addorders: [],
-      total: null,
+
+      /* data fields */
+      imagePath: null,
       price: null,
-      search: "",
+      name: null,
+      quantity: 1,
+      /* filters */
       category: null,
       type: null,
+
       sort: null,
       supplies: [],
-
+      search: "",
       pagination: [],
 
       //File Path
       path: "https://api.tea-ana.com/uploads/",
-      imagePath: null,
 
       query: null,
       queryData: null,
 
-      options1: [
-        { value: null, text: "Categories" },
-        { value: 1, text: "Milktea" },
-        { value: 3, text: "Wings" },
-        { value: 2, text: "Coffee" },
-        { value: 4, text: "Takoyaki" },
-      ],
       options2: [
         { value: null, text: "Product Type" },
-        { value: "New", text: "New" },
-        { value: "Featured", text: "Featured" },
-        { value: "Best-Selling", text: "Best-Selling" },
+        { value: "Wholesale", text: "Wholesale" },
+        { value: "Retail", text: "Retail" },
       ],
       options3: [
         { value: null, text: "Order by" },
@@ -227,7 +219,7 @@ export default {
   methods: {
     async getSupplies() {
       let response = await axios.get(
-        `https://api.tea-ana.com/v1/supplies` //endpoint
+        `https://api.tea-ana.com/v1/supplies?select=id,name,price,type,imagePath,categoryId` //endpoint
       );
       this.supplies = response.data.data;
       console.log(this.supplies);
@@ -244,15 +236,13 @@ export default {
     insertOrder: async function () {
       axios
         .post("https://api.tea-ana.com/v1/cart/supplies", {
-          name: this.addorders.name,
-          price: this.addorders.price,
+          product_id: this.addorders.id,
           quantity: this.quantity,
-          type: this.type,
         })
         .then((response) => {
           console.log(response);
-          $("#newSupplies").modal("hide");
-          swal("Record Created!", "New changes are applied!", "success");
+          $("#product-cart").modal("hide");
+          swal("Product added!", "Check your order in the Cart!", "success");
         })
         .catch((error) => {
           console.log(error.response);
@@ -297,7 +287,7 @@ export default {
           (this.search == "" && this.category != null)
         ) {
           console.log(2);
-          return el.category_id == this.category;
+          return el.categoryId == this.category;
         }
 
         /*   if (this.search == null ||
@@ -326,6 +316,9 @@ export default {
   },
 };
 </script>
+
+
+
 <!--SZ Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 .shop {

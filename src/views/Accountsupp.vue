@@ -1,6 +1,6 @@
 <template>
   <div>
-    <NavBar />
+    <NavBar2 />
     <Login />
     <EditProfile />
     <Profile />
@@ -10,14 +10,14 @@
 import Profile from "../components/Profile.vue";
 import Login from "../components/Login.vue";
 import EditProfile from "../components/EditProfile.vue";
-import NavBar from "@/components/NavBar.vue";
+import NavBar2 from "@/components/NavBar2.vue";
 
 export default {
   components: {
     Profile,
     Login,
     EditProfile,
-    NavBar,
+    NavBar2,
   },
 };
 </script>

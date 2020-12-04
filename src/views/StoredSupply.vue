@@ -12,6 +12,9 @@
         >
           <router-link to="/teaana-customer">Customer</router-link></a
         >
+        <a class="list-group-item list-group-item-action bg-transparent">
+          <router-link to="/teaana-orders">Orders</router-link></a
+        >
 
         <a class="list-group-item list-group-item-action bg-transparent">
           <router-link to="/teaana-products">Products</router-link></a

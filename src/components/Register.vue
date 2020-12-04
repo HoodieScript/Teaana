@@ -25,29 +25,34 @@
           <form class="p-4">
             <div class="form-group">
               <input
-                type="text"
-                class="form-control"
-                placeholder="Username"
-                id="username"
-                v-model="name"
-              />
-            </div>
-            <div class="form-group">
-              <input
                 type="email"
                 class="form-control"
                 placeholder="email address"
                 id="emailaddress"
                 v-model="email"
+                required
+                maxlength="20"
               />
             </div>
+            <div class="form-group">
+              <input
+                type="text"
+                class="form-control"
+                placeholder="name"
+                v-model="name"
+                required
+                maxlength="20"
+              />
+            </div>
+
             <div class="form-group">
               <input
                 type="tel"
                 class="form-control"
                 placeholder="contact number"
-                id="contactno"
                 v-model="phone"
+                required
+                maxlength="15"
               />
             </div>
             <div class="form-group">
@@ -55,13 +60,14 @@
                 type="password"
                 class="form-control"
                 placeholder="password"
-                id="password"
                 v-model="password"
+                required
+                maxlength="20"
               />
             </div>
 
             <button
-              type="submit"
+              type="button"
               class="float-right btn btn-sm pl-3 pr-3 text-white"
               style="background-color: #028476"
               @click="register()"
@@ -78,30 +84,36 @@
 
 <script>
 import axios from "axios";
+import swal from "sweetalert";
+import $ from "jquery";
 //allows cookies
 axios.defaults.withCredentials = true;
 export default {
   data() {
     return {
-      name: "",
-      email: "",
-
-      password: "",
-      phone: "",
-      url: "https://api.tea-ana.com/v1/auth",
+      name: null,
+      email: null,
+      password: null,
+      phone: null,
     };
   },
   methods: {
     register: async function () {
-      await axios
-        .post(this.url + "/register", {
+      axios
+        .post(`https://api.tea-ana.com/v1/auth/register`, {
           name: this.name,
           email: this.email,
           password: this.password,
           phone: this.phone,
         })
         .then((response) => {
-          console.log(response);
+          console.log(response.data.data);
+          $("#Registermodal").modal("hide");
+          swal(
+            "Account Registered!",
+            "You can now Login your account!",
+            "success"
+          );
         })
         .catch((error) => {
           console.log(error.response);

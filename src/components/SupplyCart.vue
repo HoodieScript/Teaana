@@ -1,4 +1,4 @@
-<template>
+<template >
   <section class="container-fluid">
     <div class="cart row border">
       <div class="col-lg-8 p-4">
@@ -17,23 +17,29 @@
                 <th scope="col">Action</th>
               </tr>
             </thead>
-            <tbody v-for="(eachcart, idx) in supplies" :key="idx">
+            <tbody v-for="(cartlist, idx) in cartlists" :key="idx">
               <tr class="mt-2 shadow-sm" style="border-radius: 20px">
                 <td>
                   <img
                     class="img img-fluid w-75 m-auto border-0 form-control"
                     alt="Tea-ana-product"
                     style="height: auto"
-                    :src="path + eachcart.imagePath"
+                    :src="path + cartlist.supply.imagePath"
                     fluid
                   />
                 </td>
-                <td>{{ eachcart.name }}</td>
-                <td>{{ eachcart.price }}</td>
-                <td>{{ eachcart.quantity }}</td>
+                <td>{{ cartlist.supply.name }}</td>
+                <td>{{ cartlist.supply.price }}</td>
+                <td>{{ cartlist.quantity }}</td>
                 <td>
-                  <button class="btn">view details</button>
-                  <button class="btn" data-toggle="modal" data-target="#">
+                  <button
+                    class="btn"
+                    data-toggle="modal"
+                    data-target="#updatecart"
+                  >
+                    view details
+                  </button>
+                  <button class="btn" @click="Deletecart(cartlist.id)">
                     &times;
                   </button>
                 </td>
@@ -56,61 +62,49 @@
               rows="5"
               placeholder="State your address here..."
               required
+              v-model="address"
             ></textarea>
           </div>
           <div class="form-group text-left">
             <p class="text-dark">Payment Method</p>
             <small>Note: Send an exact amount of payment</small>
-            <form>
-              <div class="d-flex payments mb-4">
-                <button class="btn">
-                  <img
-                    src="../assets/Images/gcash.png"
-                    class="img img-fluid"
-                    alt="Gcash-payment"
-                  />
-                </button>
-                <button class="btn">
-                  <img
-                    src="../assets/Images/paymaya.png"
-                    class="img img-fluid"
-                    alt="Payment-payment"
-                  />
-                </button>
-                <button class="btn">
-                  <img
-                    src="../assets/Images/cashondelivery.png"
-                    class="img img-fluid"
-                    alt="CashonDelivery-payment"
-                  />
-                </button>
+
+            <select
+              class="form-control custom-select"
+              v-model="paymentmethod"
+              required
+            >
+              <option value="Cash">Cash</option>
+              <option value="Paymaya">Paymaya</option>
+              <option value="G-cash">G-cash</option>
+            </select>
+            <div class="input-group mb-3">
+              <div class="input-group-prepend">
+                <span
+                  class="input-group-text bg-transparent border-0 font-weight-bold"
+                  id="basic-addon1"
+                  >Total</span
+                >
               </div>
-              <div class="input-group mb-3">
-                <div class="input-group-prepend">
-                  <span
-                    class="input-group-text bg-transparent border-0 font-weight-bold"
-                    id="basic-addon1"
-                    >Total</span
-                  >
-                </div>
-                <input
-                  type="number"
-                  class="border-0 text-right form-control bg-white"
-                  readonly
-                  placeholder="0.00"
-                  aria-label="Username"
-                  aria-describedby="basic-addon1"
-                />
-              </div>
-              <div class="input-group mb-3">
-                <input
-                  type="submit"
-                  value="Check out"
-                  class="btn btn-sm mx-auto w-50 border-0 text-white"
-                  style="background-color: #028476"
-                />
-              </div>
-            </form>
+              <input
+                type="number"
+                class="border-0 text-right form-control bg-white"
+                readonly
+                placeholder="0.00"
+                aria-label="Username"
+                aria-describedby="basic-addon1"
+                v-model.number="totalItem"
+              />
+            </div>
+            <div class="input-group mb-3">
+              <input
+                type="button"
+                value="Check out"
+                class="btn btn-sm mx-auto w-50 border-0 text-white"
+                style="background-color: #028476"
+                @click="Paymentsubmit()"
+              />
+            </div>
           </div>
         </form>
       </div>
@@ -120,30 +114,87 @@
 
 <script>
 import axios from "axios";
+import swal from "sweetalert";
+import $ from "jquery";
+axios.defaults.withCredentials = true;
+/* import $ from "jquery"; */
 export default {
   data() {
     return {
       path: "https://api.tea-ana.com/uploads/",
+      cartlists: [],
+      /* data fields */
       imagePath: null,
       name: null,
       price: null,
       quantity: null,
-      supplies: [],
-      supply: [],
+      account: null,
+      /* payment info */
+      address: null,
+      paymentmethod: null,
+      total: null,
     };
   },
   methods: {
-    async getSupplies() {
+    getProfile: async function () {
+      try {
+        const res = await axios.get("https://api.tea-ana.com/v1/auth/profile", {
+          withCredentials: true,
+        });
+        this.account = res.data;
+      } catch (error) {
+        console.error(error);
+      }
+    },
+    async getSuppliescart() {
       let response = await axios.get(
         `https://api.tea-ana.com/v1/cart/supplies` //endpoint
       );
-      this.supplies = response.data.data;
-      console.log(this.supplies);
+      this.cartlists = response.data.cart;
+      console.log(this.cartlists);
+    },
+
+    async Deletecart(id) {
+      axios
+        .delete(`https://api.tea-ana.com/v1/cart/supplies/` + id)
+        .then((res) => {
+          console.log(res);
+          swal("Record Delete!", "New changes are applied!", "success");
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+    },
+    Paymentsubmit: async function () {
+      axios
+        .post("https://api.tea-ana.com/v1/orders/supplies", {
+          address: this.address,
+          paymentmethod: this.paymentmethod,
+          total: this.price,
+        })
+        .then((response) => {
+          console.log(response);
+          $("#product-cart").modal("hide");
+          swal("Thank you!", "Your Order has succcessfully Added !", "success");
+        })
+        .catch((error) => {
+          console.log(error.response);
+        });
+    },
+  },
+  computed: {
+    totalItem: function () {
+      let sum = 0;
+      this.cartlists.forEach(function (cartlist) {
+        sum +=
+          parseFloat(cartlist.supply.price) * parseFloat(cartlist.quantity);
+      });
+
+      return sum;
     },
   },
   async created() {
-    // fetch the data pag ka load
-    this.getSupplies();
+    this.getSuppliescart();
   },
 };
 </script>
