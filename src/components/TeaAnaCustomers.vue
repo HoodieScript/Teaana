@@ -5,10 +5,9 @@
       style="border-radius: 20px !important"
     >
       <div class="col-lg-6 p-3">
-        <h4 class="font-weight-bold"></h4>
+        <h4 class="font-weight-bold">Customers</h4>
       </div>
     </div>
-    <!-- insert form product -->
 
     <div class="scrollable overflow-auto mt-3">
       <table class="table prodlist sticky table-borderless col-lg-12">
@@ -52,7 +51,7 @@ export default {
     },
 
     /* fetch */
-    async getAddons() {
+    async getUsers() {
       let response = await axios.get(
         "https://api.tea-ana.com/v1/auth/users" //endpoint
       );
@@ -89,7 +88,7 @@ export default {
   computed: {},
   async created() {
     // fetch the data pag ka load
-    this.getAddons();
+    this.getUsers();
   },
 };
 </script>

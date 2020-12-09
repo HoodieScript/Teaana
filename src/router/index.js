@@ -8,13 +8,7 @@ import Cart from '../views/Cart.vue';
 import Gallery from "../components/Gallery.vue"
 import Contact from "../components/Contact.vue"
 import Landing from "../components/Landing.vue"
-import Login from "../views/Login.vue"
-import Customer from "../views/Customer.vue"
-import StoredProducts from "../views/StoredProducts.vue"
-import StoredCustomers from "../views/StoredCustomers.vue"
-import StoredSupplies from "../views/StoredSupply.vue"
-import StoredAddons from "../views/StoredAddons.vue"
-import StoredCart from "../views/StoredCartSupply.vue"
+
 
 
 Vue.use(VueRouter);
@@ -22,7 +16,7 @@ Vue.use(VueRouter);
 const routes = [
 	{
 		path: '/',
-		name: 'home',
+		name: 'Home',
 		component: Home,
 	},
 	{
@@ -58,43 +52,49 @@ const routes = [
 	},
 	{
 		path: '/supply',
-		name: 'supply',
+		name: 'Supply',
 		component: Supply,
 	},
 	{
 		path: '/teaana-login',
-		name: 'teaana-login',
-		component: Login,
+		name: 'Login',
+		component: () => import( /* webpackChunkName: "teaana-login" */ "../views/Login.vue"),
+
 	},
-	{
-		path: '/customer',
-		name: 'customer',
-		component: Customer,
-	},
+
 	{
 		path: '/teaana-products',
-		name: 'storedproducts',
-		component: StoredProducts,
+		name: 'StoredProducts',
+		component: () => import( /* webpackChunkName: "teaana-products" */ "../views/StoredProducts.vue"),
+
 	},
 	{
 		path: '/teaana-supplies',
-		name: 'storedsupplies',
-		component: StoredSupplies,
+		name: 'StoredSupplies',
+		component: () => import( /* webpackChunkName: "teaana-supplies" */ "../views/StoredSupply.vue"),
+
 	},
 	{
 		path: '/teaana-addons',
-		name: 'storedaddons',
-		component: StoredAddons,
+		name: 'StoredAddons',
+		component: () => import( /* webpackChunkName: "teaana-addons" */ "../views/StoredAddons.vue"),
 	},
 	{
 		path: '/supply-cart',
-		name: 'storedcart',
-		component: StoredCart,
+		name: 'StoredCart',
+		component: () => import( /* webpackChunkName: "supply-cart" */ "../views/StoredCartSupply.vue"),
 	},
 	{
 		path: '/teaana-customer',
-		name: 'accountregistered',
-		component: StoredCustomers,
+		name: 'StoredCustomers',
+		component: () => import( /* webpackChunkName: "teaana-customer" */ "../views/StoredCustomers.vue"),
+
+	},
+	{
+		path: '/teaana-orders',
+		name: 'StoredCustomers',
+		component: () => import( /* webpackChunkName: "teaana-orders" */ "../views/StoredOrders.vue"),
+
 	},
 
 

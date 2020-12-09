@@ -1,4 +1,4 @@
-<template v-if="userIsLoggedIn">
+<template >
   <div class="container-fluid p-0">
     <div class="row vh-100">
       <div
@@ -84,6 +84,8 @@
 import axios from "axios";
 import swal from "sweetalert";
 import $ from "jquery";
+import { loginUser } from "../utils/auth";
+
 axios.defaults.withCredentials = true;
 export default {
   data() {
@@ -94,32 +96,12 @@ export default {
   },
   methods: {
     adminlogin: async function () {
-      axios
-        .post(
-          "https://api.tea-ana.com/v1/auth/login/cms",
-          {
-            email: this.email,
-            password: this.password,
-          },
-          { withCredentials: true }
-        )
-        .then((response) => {
-          console.log(response.data.data);
-          $("#Registermodal").modal("hide");
-          swal(
-            "Account Signed-in!",
-            "You can now access admin panel!",
-            "success"
-          );
-        })
-        .catch((error) => {
-          console.log(error.response);
-        });
-    },
-    computed: {
-      userIsLoggedIn: function () {
-        return this.$store.state.loggedIn;
-      },
+      try {
+        await loginUser(this.username, this.password);
+        this.$router.push("/");
+      } catch (err) {
+        alert(`Error: ${err}`);
+      }
     },
   },
 };

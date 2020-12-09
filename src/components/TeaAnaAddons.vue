@@ -199,7 +199,6 @@
           <tr>
             <th>Name</th>
             <th>Price</th>
-            <th>Category ID</th>
 
             <th style="width: 120px !important" colspan="2">Action</th>
           </tr>
@@ -208,7 +207,7 @@
           <tr>
             <td>{{ addon.name }}</td>
             <td>{{ addon.price }}</td>
-            <td>{{ addon.category_id }}</td>
+
             <td>
               <button
                 class="btn btn-sm"

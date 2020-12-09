@@ -38,3 +38,11 @@ new Vue({
 	router,
 	render: h => h(App),
 }).$mount('#app');
+
+Vue.config.productionTip = false
+Vue.prototype.$http = axios;
+const accessToken = localStorage.getItem('access_token')
+
+if (accessToken) {
+	Vue.prototype.$http.defaults.headers.common['Authorization'] = accessToken
+}

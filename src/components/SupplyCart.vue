@@ -28,7 +28,7 @@
                     fluid
                   />
                 </td>
-                <td>{{ cartlist.supply.name }}</td>
+                <td>{{ cartlist.supply.name }} {{ idx }}</td>
                 <td>{{ cartlist.supply.price }}</td>
                 <td>{{ cartlist.quantity }}</td>
                 <td>
@@ -37,10 +37,10 @@
                     data-toggle="modal"
                     data-target="#updatecart"
                   >
-                    view details
+                    <i class="far fa-edit"></i>
                   </button>
                   <button class="btn" @click="Deletecart(cartlist.id)">
-                    &times;
+                    <i class="far fa-times-circle"></i>
                   </button>
                 </td>
               </tr>
@@ -67,17 +67,18 @@
           </div>
           <div class="form-group text-left">
             <p class="text-dark">Payment Method</p>
-            <small>Note: Send an exact amount of payment</small>
 
             <select
               class="form-control custom-select"
-              v-model="paymentmethod"
+              v-model="paymentMethod"
               required
             >
               <option value="Cash">Cash</option>
               <option value="Paymaya">Paymaya</option>
               <option value="G-cash">G-cash</option>
             </select>
+            <small>Note: Send an exact amount of payment</small>
+
             <div class="input-group mb-3">
               <div class="input-group-prepend">
                 <span
@@ -88,7 +89,7 @@
               </div>
               <input
                 type="number"
-                class="border-0 text-right form-control bg-white"
+                class="border-0 text-right form-control bg-white number"
                 readonly
                 placeholder="0.00"
                 aria-label="Username"
@@ -123,6 +124,7 @@ export default {
     return {
       path: "https://api.tea-ana.com/uploads/",
       cartlists: [],
+
       /* data fields */
       imagePath: null,
       name: null,
@@ -131,7 +133,7 @@ export default {
       account: null,
       /* payment info */
       address: null,
-      paymentmethod: null,
+      paymentMethod: null,
       total: null,
     };
   },
@@ -169,8 +171,8 @@ export default {
       axios
         .post("https://api.tea-ana.com/v1/orders/supplies", {
           address: this.address,
-          paymentmethod: this.paymentmethod,
-          total: this.price,
+          paymentmMethod: this.paymentMethod,
+          total: this.totalItem,
         })
         .then((response) => {
           console.log(response);
@@ -195,6 +197,17 @@ export default {
   },
   async created() {
     this.getSuppliescart();
+  },
+  mounted() {
+    $("input.number").keyup(function (event) {
+      // skip for arrow keys
+      if (event.which >= 37 && event.which <= 40) return;
+
+      // format number
+      $(this).val(function (index, value) {
+        return value.replace(/\D/g, "").replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+      });
+    });
   },
 };
 </script>
@@ -242,7 +255,7 @@ td:nth-child(4) {
 }
 @media only screen and (max-width: 992px) {
   table.mycart td:nth-child(1) {
-    display: none;
+    display: none !important;
   }
   table td {
     font-size: 10px;
@@ -250,8 +263,8 @@ td:nth-child(4) {
   table td button {
     font-size: 10px;
   }
-  table.mycart th:nth-child(1) {
-    display: none;
+  table.thead.tr.mycart th:nth-child(1) {
+    display: none !important;
   }
 }
 .scrollable-2 {

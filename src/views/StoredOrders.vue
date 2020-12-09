@@ -34,7 +34,7 @@
           <i class="fas fa-bars"></i>
         </button>
 
-        <div class="ml-auto" id="navbarSupportedContent">
+        <div class="ml-auto">
           <ul class="navbar-nav ml-auto mt-2 mt-lg-0">
             <li class="nav-item">
               <button class="btn btn-transparent" @click="logout()">
@@ -45,7 +45,7 @@
         </div>
       </nav>
 
-      <main class="container"><TeaAnaCustomers /></main>
+      <main class="container"><TeaAnaOrders /></main>
     </div>
   </div>
 </template>
@@ -53,28 +53,12 @@
 <script>
 import axios from "axios";
 import $ from "jquery";
-import TeaAnaCustomers from "../components/TeaAnaCustomers.vue";
-axios.defaults.withCredentials = true;
+import TeaAnaOrders from "../components/TeaAnaOrders.vue";
 export default {
-  data() {
-    return {
-      account: null,
-    };
-  },
   components: {
-    TeaAnaCustomers,
+    TeaAnaOrders,
   },
   methods: {
-    getProfile: async function () {
-      try {
-        const res = await axios.get("https://api.tea-ana.com/v1/auth/profile", {
-          withCredentials: true,
-        });
-        this.account = res.data;
-      } catch (error) {
-        console.error(error);
-      }
-    },
     logout: async function () {
       try {
         const res = await axios.get(
@@ -83,6 +67,8 @@ export default {
             withCredentials: true,
           }
         );
+        window.location.href = "teaana-login";
+
         console.log(res);
       } catch (error) {
         console.error(error);

@@ -33,24 +33,10 @@
 
         <div class="ml-auto" id="navbarSupportedContent">
           <ul class="navbar-nav ml-auto mt-2 mt-lg-0">
-            <li class="nav-item dropdown">
-              <a
-                class="nav-link dropdown-toggle"
-                href="#"
-                id="navbarDropdown"
-                role="button"
-                data-toggle="dropdown"
-                aria-haspopup="true"
-                aria-expanded="false"
-              >
-                **Username**
-              </a>
-              <div
-                class="dropdown-menu dropdown-menu-right"
-                aria-labelledby="navbarDropdown"
-              >
-                <a class="dropdown-item" href="#">Logout</a>
-              </div>
+            <li class="nav-item">
+              <button class="btn btn-transparent" @click="logout()">
+                Log out
+              </button>
             </li>
           </ul>
         </div>
@@ -62,6 +48,7 @@
 </template>
 
 <script>
+import axios from "axios";
 import $ from "jquery";
 import TeaAnaAddons from "../components/TeaAnaAddons.vue";
 export default {
@@ -73,6 +60,21 @@ export default {
       e.preventDefault();
       $("#wrapper").toggleClass("toggled");
     });
+  },
+  methods: {
+    logout: async function () {
+      try {
+        const res = await axios.get(
+          "https://api.tea-ana.com/v1/auth/logout/cms",
+          {
+            withCredentials: true,
+          }
+        );
+        console.log(res);
+      } catch (error) {
+        console.error(error);
+      }
+    },
   },
 };
 </script>

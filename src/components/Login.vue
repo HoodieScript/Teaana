@@ -105,6 +105,7 @@ export default {
           console.log(response.data.data);
           $("#Loginmodal").modal("hide");
           swal("Account Signed-in!", "You can now order products!", "success");
+          window.location.href = "supply";
         })
         .catch((error) => {
           console.log(error.response);

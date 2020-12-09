@@ -1,6 +1,6 @@
 <template>
   <div>
-    <NavBar2 />
+    <NavBar2 :key="componentKey" />
     <Login />
     <EditProfile />
     <Profile />
@@ -18,6 +18,16 @@ export default {
     Login,
     EditProfile,
     NavBar2,
+  },
+  data() {
+    return {
+      componentKey: 0,
+    };
+  },
+  methods: {
+    forceRerender() {
+      this.componentKey += 1;
+    },
   },
 };
 </script>

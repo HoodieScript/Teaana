@@ -186,20 +186,7 @@
                   @input="handleInput"
                 />
               </div>
-              <div class="form-group text-left">
-                <small class="pb-3">Supply type</small>
-                <select
-                  v-model.number="eachofsupp.categoryId"
-                  @change="onChange"
-                  class="form-control custom-select"
-                  required
-                >
-                  <!--                   <option selected disabled>--- select type ---</option>
- -->
-                  <option value="1">1</option>
-                  <option value="2">2</option>
-                </select>
-              </div>
+
               <div class="form-group text-left">
                 <small class="pb-3">Supply type</small>
                 <!-- @change="watchSelectedItemId($event)" -->
@@ -237,7 +224,6 @@
             <th>Image</th>
             <th>Name</th>
             <th>Price</th>
-            <th>Category ID</th>
             <th>Type</th>
             <th style="width: 120px !important" colspan="2">Action</th>
           </tr>
@@ -255,7 +241,6 @@
             </td>
             <td>{{ supply.name }}</td>
             <td>{{ supply.price }}</td>
-            <td>{{ supply.categoryId }}</td>
             <td>{{ supply.type }}</td>
             <td>
               <button
@@ -374,7 +359,7 @@ export default {
         });
     },
     /* update */
-    updateSupply: function (id) {
+    updateSupply: async function (id) {
       axios
         .put("https://api.tea-ana.com/v1/supplies/" + id, {
           name: this.eachofsupp.name,
@@ -383,7 +368,7 @@ export default {
           type: this.eachofsupp.type,
         })
         .then((response) => {
-          console.log(response);
+          console.log(response.data.data);
           $("#upSupplies").modal("hide");
           swal("Record Updated!", "New changes are applied!", "success");
         })
@@ -392,11 +377,11 @@ export default {
         });
     },
     /* delete */
-    async deleteSupply(id) {
+    deleteSupply: async function (id) {
       axios
         .delete(`https://api.tea-ana.com/v1/supplies/` + id)
-        .then((res) => {
-          console.log(res);
+        .then((response) => {
+          console.log(response.data.data);
           swal("Record Delete!", "New changes are applied!", "success");
         })
         .catch((err) => {
@@ -404,6 +389,7 @@ export default {
         });
     },
   },
+
   computed: {},
   async created() {
     // fetch the data pag ka load

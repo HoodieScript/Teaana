@@ -86,15 +86,12 @@
                 <small class="pb-3">Product Category</small>
                 <select
                   class="form-control custom-select"
-                  v-model="category_id"
+                  v-model.number="category_id"
                 >
-                  <option
-                    v-for="(category, idx) in categories"
-                    :value="category.id"
-                    v-bind:key="idx"
-                  >
-                    {{ category.id }} -{{ category.name }}
-                  </option>
+                  <option value="1">Milktea</option>
+                  <option value="2">Coffee</option>
+                  <option value="3">Wings</option>
+                  <option value="4">Takoyaki</option>
                 </select>
               </div>
 
@@ -172,16 +169,12 @@
                 <small class="pb-3">Product Category</small>
                 <select
                   class="form-control custom-select"
-                  v-model="eachofprods.category_id"
-                  @change="onChange"
+                  v-model.number="eachofprods.category_id"
                 >
-                  <option
-                    v-for="(category, idx) in categories"
-                    v-bind:key="idx"
-                    :value="category.id"
-                  >
-                    {{ category.id }} - {{ category.name }}
-                  </option>
+                  <option value="1">Milktea</option>
+                  <option value="2">Coffee</option>
+                  <option value="3">Wings</option>
+                  <option value="4">Takoyaki</option>
                 </select>
               </div>
 
@@ -190,7 +183,6 @@
                 <select
                   class="form-control custom-select"
                   v-model="eachofprods.productType"
-                  @change="this.onChange"
                   required
                 >
                   <option value="New">New</option>
@@ -228,7 +220,7 @@
           <tr>
             <td>{{ product.name }}</td>
             <td>{{ product.price }}</td>
-            <td>{{ product.category_id }}</td>
+            <td>{{ product.category.name }}</td>
             <td>{{ product.productType }}</td>
             <td>
               <button
@@ -297,14 +289,7 @@ export default {
     handleInput(e) {
       this.val = e.target.value.replace(/[^\d]/g, "");
     },
-    async getCategory() {
-      let response = await axios.get(
-        "https://api.tea-ana.com/v1/categories" //endpoint
-      );
 
-      this.categories = response.data.data;
-      console.log(this.categories);
-    },
     async eachProduct(id) {
       axios
         .get(`https://api.tea-ana.com/v1/products/` + id)
@@ -344,6 +329,7 @@ export default {
           name: this.eachofprods.name,
           price: this.eachofprods.price,
           productType: this.eachofprods.productType,
+          category_id: this.eachofprods.category_id,
         })
         .then((response) => {
           console.log(response);
@@ -371,7 +357,6 @@ export default {
   computed: {},
   async created() {
     // fetch the data pag ka load
-    this.getCategory();
     this.getProducts();
   },
 };

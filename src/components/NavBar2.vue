@@ -105,9 +105,12 @@ export default {
   methods: {
     getProfile: async function () {
       try {
-        const res = await axios.get("https://api.tea-ana.com/v1/auth/profile", {
-          withCredentials: true,
-        });
+        const res = await axios.get(
+          "https://api.tea-ana.com/v1/auth/profile/supplies",
+          {
+            withCredentials: true,
+          }
+        );
         this.account = res.data;
       } catch (error) {
         console.error(error);
