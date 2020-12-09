@@ -64,12 +64,11 @@ export default {
   methods: {
     logout: async function () {
       try {
-        const res = await axios.get(
-          "https://api.tea-ana.com/v1/auth/logout/cms",
-          {
-            withCredentials: true,
-          }
-        );
+        const res = await axios.get("https://api.tea-ana.com/v1/auth/logout/", {
+          withCredentials: true,
+        });
+        this.$router.push("/teaana-login");
+
         console.log(res);
       } catch (error) {
         console.error(error);

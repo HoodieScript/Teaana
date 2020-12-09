@@ -1,17 +1,17 @@
-import decode from 'jwt-decode'
+/* import decode from 'jwt-decode'
 import axios from 'axios'
 
 const REST_ENDPOINT = 'https://api.tea-ana.com/'
 const AUTH_TOKEN_KEY = 'authToken'
 
-export function loginUser(username, password) {
+export function loginUser(email, password) {
     return new Promise(async (resolve, reject) => {
         try {
             let res = await axios({
                 url: `${REST_ENDPOINT}v1/auth/login/cms`,
                 method: 'POST',
                 data: {
-                    username: username,
+                    email: email,
                     password: password,
 
                 }
@@ -71,4 +71,4 @@ function getTokenExpirationDate(encodedToken) {
 function isTokenExpired(token) {
     let expirationDate = getTokenExpirationDate(token)
     return expirationDate < new Date()
-}
+} */

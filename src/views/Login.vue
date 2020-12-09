@@ -84,8 +84,6 @@
 import axios from "axios";
 import swal from "sweetalert";
 import $ from "jquery";
-import { loginUser } from "../utils/auth";
-
 axios.defaults.withCredentials = true;
 export default {
   data() {
@@ -96,12 +94,32 @@ export default {
   },
   methods: {
     adminlogin: async function () {
-      try {
-        await loginUser(this.username, this.password);
-        this.$router.push("/");
-      } catch (err) {
-        alert(`Error: ${err}`);
-      }
+      axios
+        .post(
+          "https://api.tea-ana.com/v1/auth/login/cms",
+          {
+            email: this.email,
+            password: this.password,
+          },
+          { withCredentials: true }
+        )
+        .then((response) => {
+          console.log(response.data.data);
+          $("#Registermodal").modal("hide");
+          swal(
+            "Account Signed-in!",
+            "You can now access admin panel!",
+            "success"
+          );
+          /*           alert(`Token received: ${response.data.token}`);
+          localStorage.setItem("token", response.data.token);
+ */ this.$router.push(
+            "/teaana-customer"
+          );
+        })
+        .catch((error) => {
+          console.log(error.response);
+        });
     },
   },
 };

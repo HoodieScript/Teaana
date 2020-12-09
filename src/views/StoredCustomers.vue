@@ -52,6 +52,7 @@
 
 <script>
 import axios from "axios";
+import swal from "sweetalert";
 import $ from "jquery";
 import TeaAnaCustomers from "../components/TeaAnaCustomers.vue";
 axios.defaults.withCredentials = true;
@@ -77,12 +78,13 @@ export default {
     },
     logout: async function () {
       try {
-        const res = await axios.get(
-          "https://api.tea-ana.com/v1/auth/logout/cms",
-          {
-            withCredentials: true,
-          }
-        );
+        const res = await axios.get("https://api.tea-ana.com/v1/auth/logout/", {
+          withCredentials: true,
+        });
+        swal("Account Log out!", "You have been directed to login!", "success");
+
+        this.$router.push("/teaana-login");
+
         console.log(res);
       } catch (error) {
         console.error(error);
