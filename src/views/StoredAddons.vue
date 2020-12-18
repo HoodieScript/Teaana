@@ -12,6 +12,9 @@
         >
           <router-link to="/teaana-customer">Customer</router-link></a
         >
+        <a class="list-group-item list-group-item-action bg-transparent">
+          <router-link to="/teaana-orders">Orders</router-link></a
+        >
 
         <a class="list-group-item list-group-item-action bg-transparent">
           <router-link to="/teaana-products">Products</router-link></a
@@ -49,6 +52,7 @@
 
 <script>
 import axios from "axios";
+import swal from "sweetalert";
 import $ from "jquery";
 import TeaAnaAddons from "../components/TeaAnaAddons.vue";
 export default {
@@ -67,8 +71,10 @@ export default {
         const res = await axios.get("https://api.tea-ana.com/v1/auth/logout/", {
           withCredentials: true,
         });
-        this.$router.push("/teaana-login");
-
+        swal("Account Log out!", "You have been directed to login!", "success");
+        window.location.href = "teaana-login";
+        /*         this.$router.push("/teaana-login");
+         */
         console.log(res);
       } catch (error) {
         console.error(error);

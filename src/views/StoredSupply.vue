@@ -52,6 +52,8 @@
 
 <script>
 import axios from "axios";
+import swal from "sweetalert";
+
 import $ from "jquery";
 import TeaAnaSupply from "../components/TeaAnaSupply.vue";
 export default {
@@ -70,8 +72,11 @@ export default {
         const res = await axios.get("https://api.tea-ana.com/v1/auth/logout/", {
           withCredentials: true,
         });
-        this.$router.push("/teaana-login");
+        swal("Account Log out!", "You have been directed to login!", "success");
 
+        this.$router.replace({ name: "Login" });
+        /*         this.$router.push("/teaana-login");
+         */
         console.log(res);
       } catch (error) {
         console.error(error);

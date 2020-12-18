@@ -63,15 +63,6 @@
             </button>
           </form>
         </div>
-        <div class="modal-footer google">
-          <button class="btn btn-md m-auto border rounded-lg">
-            <img
-              class="img img-fluid p-0 vertical-align-middle m-2"
-              src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg"
-            />
-            <span class="text-dark">Sign in with google</span>
-          </button>
-        </div>
       </div>
     </div>
   </div>

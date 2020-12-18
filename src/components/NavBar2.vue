@@ -89,6 +89,7 @@
 <script>
 /* import $ from "jquery"; */
 import axios from "axios";
+import swal from "sweetalert";
 //allows cookies
 axios.defaults.withCredentials = true;
 export default {
@@ -121,6 +122,9 @@ export default {
         const res = await axios.get("https://api.tea-ana.com/v1/auth/logout", {
           withCredentials: true,
         });
+        swal("Account Log out!", "You have been directed to login!", "success");
+
+        window.location.href = "supply";
         console.log(res);
       } catch (error) {
         console.error(error);

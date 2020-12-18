@@ -60,17 +60,31 @@
             </button>
           </div>
           <div class="modal-body">
-            <form>
-              <!-- <div class="form-group text-left">
-                <small class="pb-3">Image File</small>
-
-                <input
-                  type="file"
-                  class="form-control"
-                  required
-                  @change="onFileSelected"
+            <form
+              method="post"
+              @submit.prevent="insertSupply"
+              enctype="multipart/form-data"
+            >
+              <div class="form-group text-left">
+                <label
+                  >File Preview
+                  <input
+                    type="file"
+                    id="file"
+                    ref="file"
+                    class="form-control"
+                    accept="image/*"
+                    v-on:change="handleFileUpload()"
+                  />
+                </label>
+                <img
+                  v-bind:src="imagePreview"
+                  class="img img-fluid"
+                  style="max-height: 200px"
+                  v-show="showPreview"
                 />
-              </div> -->
+              </div>
+
               <div class="form-group text-left">
                 <small class="pb-3">Supply Name</small>
 
@@ -89,7 +103,6 @@
                   type="number"
                   class="form-control"
                   v-model.number="price"
-                  @input="handleInput"
                 />
               </div>
 
@@ -120,8 +133,7 @@
               </div>
               <div class="form-group">
                 <input
-                  type="button"
-                  @click="insertSupply()"
+                  type="submit"
                   class="btn btn-sm float-right pl-3 pr-3 text-white"
                   style="background-color: #028476; border-radius: 20px"
                   value="create"
@@ -157,16 +169,31 @@
             </button>
           </div>
           <div class="modal-body">
-            <form>
-              <div class="form-group">
+            <form
+              method="post"
+              @submit.prevent="updateSupply(eachofsupp.id)"
+              enctype="multipart/form-data"
+            >
+              <div class="form-group text-left">
+                <label
+                  >File Preview
+                  <input
+                    type="file"
+                    id="file"
+                    ref="file"
+                    class="form-control"
+                    accept="image/*"
+                    v-on:change="handleFileUpload2()"
+                  />
+                </label>
                 <img
-                  class="img img-fluid w-75 m-auto border-0 form-control"
-                  alt="Tea-ana-product"
-                  style="height: auto"
-                  :src="path + eachofsupp.imagePath"
-                  fluid
+                  v-bind:src="imagePreview2"
+                  class="img img-fluid"
+                  style="max-height: 200px"
+                  v-show="showPreview"
                 />
               </div>
+
               <div class="form-group text-left">
                 <small class="pb-3">Supply Name</small>
                 <input
@@ -183,8 +210,20 @@
                   class="form-control"
                   v-model.number="eachofsupp.price"
                   required
-                  @input="handleInput"
                 />
+              </div>
+              <div class="form-group text-left">
+                <small class="pb-3">Suppy Category</small>
+                <select
+                  class="form-control custom-select"
+                  required
+                  v-model.number="eachofsupp.categoryId"
+                >
+                  <option value="1">1</option>
+                  <option value="2">2</option>
+                  <option value="3">3</option>
+                  <option value="4">4</option>
+                </select>
               </div>
 
               <div class="form-group text-left">
@@ -192,7 +231,6 @@
                 <!-- @change="watchSelectedItemId($event)" -->
                 <select
                   v-model="eachofsupp.type"
-                  @change="onChange"
                   class="form-control custom-select"
                   required
                 >
@@ -204,8 +242,7 @@
               </div>
               <div class="form-group">
                 <input
-                  type="button"
-                  @click="updateSupply(eachofsupp.id)"
+                  type="submit"
                   class="btn btn-sm float-right pl-3 pr-3 text-white"
                   style="background-color: #028476; border-radius: 20px"
                   value="update"
@@ -290,25 +327,148 @@ export default {
       val: null,
       type: null,
       path: "https://api.tea-ana.com/uploads/",
-      selectedFile: null,
+
+      showPreview: false,
+      imagePreview: "",
+      imagePreview2: "",
     };
   },
   methods: {
-    onChange(event) {
-      console.log(event.target.value);
+    onFileSelected(event) {
+      this.imagePath = event.target.files[0];
+      console.log(event.target.files[0]);
     },
-    /*    watchSelectedItemId: function (event) {
-      console.log(
-        event.target.options[event.target.selectedIndex].attributes[
-          "data-item-type"
-        ].value
+    handleFileUpload() {
+      /*
+      Set the local file variable to what the user has selected.
+    */
+      this.imagePath = this.$refs.file.files[0];
+
+      /*
+      Initialize a File Reader object
+    */
+      let reader = new FileReader();
+
+      /*
+      Add an event listener to the reader that when the file
+      has been loaded, we flag the show preview as true and set the
+      image to be what was read from the reader.
+    */
+      reader.addEventListener(
+        "load",
+        function () {
+          this.showPreview = true;
+          this.imagePreview = reader.result;
+        }.bind(this),
+        false
       );
-    }, */
 
-    handleInput(e) {
-      this.val = e.target.value.replace(/[^\d]/g, "");
+      /*
+      Check to see if the file is not empty.
+    */
+      if (this.imagePath) {
+        /*
+        Ensure the file is an image file.
+      */
+        if (/\.(jpe?g|png|gif)$/i.test(this.imagePath.name)) {
+          /*
+          Fire the readAsDataURL method which will read the file in and
+          upon completion fire a 'load' event which we will listen to and
+          display the image in the preview.
+        */
+          reader.readAsDataURL(this.imagePath);
+        }
+      }
     },
+    handleFileUpload2() {
+      /*
+      Set the local file variable to what the user has selected.
+    */
+      this.eachofsupp.imagePath = this.$refs.file.files[0];
 
+      /*
+      Initialize a File Reader object
+    */
+      let reader = new FileReader();
+
+      /*
+      Add an event listener to the reader that when the file
+      has been loaded, we flag the show preview as true and set the
+      image to be what was read from the reader.
+    */
+      reader.addEventListener(
+        "load",
+        function () {
+          this.showPreview = true;
+          this.imagePreview2 = reader.result;
+        }.bind(this),
+        false
+      );
+
+      /*
+      Check to see if the file is not empty.
+    */
+      if (this.eachofsupp.imagePath) {
+        /*
+        Ensure the file is an image file.
+      */
+        if (/\.(jpe?g|png|gif)$/i.test(this.eachofsupp.imagePath.name)) {
+          /*
+          Fire the readAsDataURL method which will read the file in and
+          upon completion fire a 'load' event which we will listen to and
+          display the image in the preview.
+        */
+          reader.readAsDataURL(this.eachofsupp.imagePath);
+        }
+      }
+    },
+    insertSupply: async function () {
+      const formData = new FormData();
+      formData.append("name", this.name);
+      formData.append("price", this.price);
+      formData.append("categoryId", this.categoryId);
+      formData.append("type", this.type);
+
+      formData.append("file", this.imagePath);
+
+      axios
+        .post(
+          "https://api.tea-ana.com/v1/supplies",
+          formData,
+
+          /* {
+            name: this.name,
+            price: this.price,
+            categoryId: this.categoryId,
+            type: this.type,
+            imagePath: formData,
+          }, */
+          /*  {
+            headers: {
+              "Content-Type":
+                "multipart/form-data;charset=utf-8 boundary --- WebKit193844043-h; name=imagePath",
+            },
+          }, */
+
+          {
+            onUploadProgress: (uploadEvent) => {
+              console.log(
+                "Upload Progress" +
+                  Math.round((uploadEvent.loaded / uploadEvent.total) * 100) +
+                  "%"
+              );
+            },
+          }
+        )
+        .then((response) => {
+          console.log(response);
+          $("#newSupplies").modal("hide");
+          swal("Record Created!", "New changes are applied!", "success");
+        })
+        .catch((error) => {
+          console.log(error.response);
+        });
+    },
     /* fetch */
     async getSupplies() {
       let response = await axios.get(
@@ -326,47 +486,18 @@ export default {
         });
       console.log(this.eachofsupp);
     },
-    /* insert */
-    /* onFileSelected(event) {
-      this.imagePath = event.target.files[0];
-    }, */
-    insertSupply: async function () {
-      /*   const fd = new FormData();
-      fd.append("image", this.imagePath, this.imagePath);
-    axios
-        .post(
-          "https://api.tea-ana.com/v1/supplies",
-        )
-       */
-      axios
-        .post(
-          "https://api.tea-ana.com/v1/supplies",
 
-          {
-            name: this.name,
-            price: this.price,
-            categoryId: this.categoryId,
-            type: this.type,
-          }
-        )
-        .then((response) => {
-          console.log(response);
-          $("#newSupplies").modal("hide");
-          swal("Record Created!", "New changes are applied!", "success");
-        })
-        .catch((error) => {
-          console.log(error.response);
-        });
-    },
     /* update */
     updateSupply: async function (id) {
+      const formData = new FormData();
+      formData.append("name", this.eachofsupp.name);
+      formData.append("price", this.eachofsupp.price);
+      formData.append("categoryId", this.eachofsupp.categoryId);
+      formData.append("type", this.eachofsupp.type);
+
+      formData.append("file", this.eachofsupp.imagePath);
       axios
-        .put("https://api.tea-ana.com/v1/supplies/" + id, {
-          name: this.eachofsupp.name,
-          price: this.eachofsupp.price,
-          categoryId: this.eachofsupp.categoryId,
-          type: this.eachofsupp.type,
-        })
+        .put("https://api.tea-ana.com/v1/supplies/" + id, formData)
         .then((response) => {
           console.log(response.data.data);
           $("#upSupplies").modal("hide");

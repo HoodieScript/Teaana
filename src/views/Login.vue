@@ -33,7 +33,7 @@
             type="button"
             class="float-right btn btn-sm pl-3 pr-3 text-white"
             style="background-color: #028476"
-            @click="adminlogin()"
+            @click="login()"
           >
             Login
           </button>
@@ -84,8 +84,11 @@
 import axios from "axios";
 import swal from "sweetalert";
 import $ from "jquery";
+
 axios.defaults.withCredentials = true;
+
 export default {
+  name: "Login",
   data() {
     return {
       email: "",
@@ -93,7 +96,7 @@ export default {
     };
   },
   methods: {
-    adminlogin: async function () {
+    login: async function () {
       axios
         .post(
           "https://api.tea-ana.com/v1/auth/login/cms",
@@ -113,14 +116,20 @@ export default {
           );
           /*           alert(`Token received: ${response.data.token}`);
           localStorage.setItem("token", response.data.token);
- */ this.$router.push(
-            "/teaana-customer"
-          );
+ */
+          /*           window.location.href = "teaana-customer";
+          
+           */
+          this.$store.commit("setAuthentication", true);
+          this.$router.replace({ name: "StoredCustomers" });
+          /*           this.$router.push({ name: "teaana-customer" });
+           */
         })
         .catch((error) => {
           console.log(error.response);
         });
     },
+    mounted() {},
   },
 };
 </script>

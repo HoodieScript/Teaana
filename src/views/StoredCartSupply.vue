@@ -4,7 +4,6 @@
     <Login />
     <CartList />
     <Register />
-    <UpdateItem />
     <Footer />
   </div>
 </template>
@@ -12,7 +11,6 @@
 import Login from "@/components/Login.vue";
 import Register from "@/components/Register.vue";
 import CartList from "@/components/SupplyCart.vue";
-import UpdateItem from "@/components/UpdateItem.vue";
 import Footer from "@/components/NavFooter.vue";
 import NavBar2 from "@/components/NavBar2.vue";
 export default {
@@ -21,7 +19,7 @@ export default {
     Login,
     Register,
     CartList,
-    UpdateItem,
+    
     Footer,
   },
 };

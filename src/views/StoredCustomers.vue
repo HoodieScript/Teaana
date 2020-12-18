@@ -57,7 +57,9 @@ import $ from "jquery";
 import TeaAnaCustomers from "../components/TeaAnaCustomers.vue";
 axios.defaults.withCredentials = true;
 export default {
+  name: 'StoredCustomers',
   data() {
+    
     return {
       account: null,
     };
@@ -66,25 +68,15 @@ export default {
     TeaAnaCustomers,
   },
   methods: {
-    getProfile: async function () {
-      try {
-        const res = await axios.get("https://api.tea-ana.com/v1/auth/profile", {
-          withCredentials: true,
-        });
-        this.account = res.data;
-      } catch (error) {
-        console.error(error);
-      }
-    },
     logout: async function () {
       try {
         const res = await axios.get("https://api.tea-ana.com/v1/auth/logout/", {
           withCredentials: true,
         });
         swal("Account Log out!", "You have been directed to login!", "success");
-
-        this.$router.push("/teaana-login");
-
+        window.location.href = "teaana-login";
+        /*         this.$router.push("/teaana-login");
+         */
         console.log(res);
       } catch (error) {
         console.error(error);

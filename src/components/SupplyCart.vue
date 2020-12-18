@@ -5,6 +5,51 @@
         <h1 class="text-left mb-3 font-weight-bold">
           <label>Your</label> <label>Cart</label>
         </h1>
+        <div
+          class="modal fade"
+          id="updatecart"
+          tabindex="-1"
+          aria-labelledby="updatecart"
+          aria-hidden="true"
+        >
+          <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="newAddons">Update Addon</h5>
+                <button
+                  type="button"
+                  class="close"
+                  data-dismiss="modal"
+                  aria-label="Close"
+                >
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                <form>
+                  <div class="form-group text-left">
+                    <small class="pb-3">Addon Name</small>
+                    <input
+                      type="text"
+                      class="form-control"
+                      v-model="eachofcart.name"
+                    />
+                  </div>
+
+                  <div class="form-group">
+                    <input
+                      type="button"
+                      @click="updateCart(eachofcart.cartitem_id)"
+                      class="btn btn-sm float-right pl-3 pr-3 text-white"
+                      style="background-color: #028476; border-radius: 20px"
+                      value="update"
+                    />
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
 
         <div class="scrollable-2 overflow-auto">
           <table class="table mycart sticky table-borderless text-center">
@@ -36,10 +81,11 @@
                     class="btn"
                     data-toggle="modal"
                     data-target="#updatecart"
+                    @click="eachCart(cartlist.cartitem_id)"
                   >
                     <i class="far fa-edit"></i>
                   </button>
-                  <button class="btn" @click="Deletecart(cartlist.id)">
+                  <button class="btn" @click="Deletecart(cartlist.cartitem_id)">
                     <i class="far fa-times-circle"></i>
                   </button>
                 </td>
@@ -124,7 +170,7 @@ export default {
     return {
       path: "https://api.tea-ana.com/uploads/",
       cartlists: [],
-
+      eachofcart: [],
       /* data fields */
       imagePath: null,
       name: null,
@@ -166,6 +212,14 @@ export default {
         .catch((err) => {
           console.error(err);
         });
+    },
+    async eachCart(cartitem_id) {
+      axios
+        .get(`https://api.tea-ana.com/v1/cart/supplies/item/` + cartitem_id)
+        .then((response) => {
+          this.eachofcart = response.data.cart;
+        });
+      console.log(this.eachofcart);
     },
     Paymentsubmit: async function () {
       axios

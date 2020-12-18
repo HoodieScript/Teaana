@@ -19,13 +19,13 @@
           class="col-2 m-1 d-inline fill"
         >
         </b-form-input>
-
+        <!-- 
         <b-form-select
           v-model="type"
           :options="options2"
           class="col-2 m-1 d-inline fill"
         ></b-form-select>
-
+ -->
         <b-form-select
           v-model="sort"
           :options="options3"
@@ -53,7 +53,7 @@
             <img
               class="img img-fluid w-75 m-auto border-0 form-control"
               alt="Tea-ana-product"
-              style="height: auto"
+              style="height: 200px"
               :src="path + supply.imagePath"
               fluid
             />
@@ -202,12 +202,12 @@ export default {
 
       query: null,
       queryData: null,
-
+      /* 
       options2: [
         { value: null, text: "Product Type" },
         { value: "Wholesale", text: "Wholesale" },
         { value: "Retail", text: "Retail" },
-      ],
+      ], */
       options3: [
         { value: null, text: "Order by" },
         { value: "asc", text: "Low to High" },
@@ -217,7 +217,7 @@ export default {
   },
 
   methods: {
-    async getSupplies() {
+    getSupplies: async function () {
       let response = await axios.get(
         `https://api.tea-ana.com/v1/supplies?select=id,name,price,type,imagePath,categoryId` //endpoint
       );
@@ -243,6 +243,7 @@ export default {
           console.log(response);
           $("#product-cart").modal("hide");
           swal("Product added!", "Check your order in the Cart!", "success");
+          this.getSupplies();
         })
         .catch((error) => {
           console.log(error.response);

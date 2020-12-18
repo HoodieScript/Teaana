@@ -59,7 +59,20 @@
             </button>
           </div>
           <div class="modal-body">
-            <form>
+            <form
+              @submit.prevent="insertProduct"
+              enctype="multipart/form-data"
+              method="post"
+            >
+              <div class="form-group text-left">
+                <small class="pb-3">Product Name</small>
+                <input
+                  type="file"
+                  ref="uploadBtn"
+                  class="form-control"
+                  :required="true"
+                />
+              </div>
               <div class="form-group text-left">
                 <small class="pb-3">Product Name</small>
 
@@ -108,8 +121,7 @@
               </div>
               <div class="form-group">
                 <input
-                  type="button"
-                  @click="insertProduct()"
+                  type="submit"
                   class="btn btn-sm float-right pl-3 pr-3 text-white"
                   style="background-color: #028476; border-radius: 20px"
                   value="create"
@@ -209,6 +221,7 @@
       <table class="table prodlist sticky table-borderless col-lg-12">
         <thead>
           <tr>
+            <th>Image</th>
             <th>Product name</th>
             <th>Price</th>
             <th>Category ID</th>
@@ -218,6 +231,15 @@
         </thead>
         <tbody v-for="(product, idx) in products" v-bind:key="idx">
           <tr>
+            <td>
+              <img
+                class="img img-fluid w-75 m-auto border-0 form-control"
+                alt="Tea-ana-product"
+                style="height: auto"
+                :src="path + product.imagePath"
+                fluid
+              />
+            </td>
             <td>{{ product.name }}</td>
             <td>{{ product.price }}</td>
             <td>{{ product.category.name }}</td>
@@ -270,6 +292,8 @@ export default {
       category_id: null,
       val: null,
       productType: null,
+      imagePath: null,
+      selectedimage: null,
       path: "https://api.tea-ana.com/uploads/",
     };
   },
@@ -306,18 +330,32 @@ export default {
       console.log(this.products);
     },
     insertProduct: async function () {
+      let files = this.$refs.uploadBtn.files;
+      let formData = new FormData();
+      formData.append("imagePath", files[0]);
       axios
-        .post("https://api.tea-ana.com/v1/products", {
-          name: this.name,
-          price: this.price,
-          category_id: this.category_id,
+        .post(
+          "https://api.tea-ana.com/v1/products",
+          {
+            name: this.name,
+            price: this.price,
+            category_id: this.category_id,
 
-          productType: this.productType,
-        })
+            productType: this.productType,
+            imagePath: formData,
+          },
+          {
+            headers: {
+              "Content-Type":
+                "multipart/form-datal boundary=----WebKitFormBoundary5g0xJihuBbfw8DEp",
+            },
+          }
+        )
         .then((response) => {
           console.log(response);
           $("#newproducts").modal("hide");
           swal("Record Added!", "New changes are applied!", "success");
+          this.$router.push("/teaana-products");
         })
         .catch((error) => {
           console.log(error.response);
@@ -348,6 +386,7 @@ export default {
         .then((res) => {
           console.log(res);
           swal("Record Deleted!", "New changes are applied!", "success");
+          window.location.href = "teaana-products";
         })
         .catch((err) => {
           console.error(err);
