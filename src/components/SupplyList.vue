@@ -217,7 +217,7 @@ export default {
   },
 
   methods: {
-    getSupplies: async function () {
+    async getSupplies() {
       let response = await axios.get(
         `https://api.tea-ana.com/v1/supplies?select=id,name,price,type,imagePath,categoryId` //endpoint
       );
@@ -233,7 +233,7 @@ export default {
         });
       console.log(this.addorders);
     },
-    insertOrder: async function () {
+    async insertOrder() {
       axios
         .post("https://api.tea-ana.com/v1/cart/supplies", {
           product_id: this.addorders.id,

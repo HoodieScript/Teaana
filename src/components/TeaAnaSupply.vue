@@ -66,22 +66,14 @@
               enctype="multipart/form-data"
             >
               <div class="form-group text-left">
-                <label
-                  >File Preview
-                  <input
-                    type="file"
-                    id="file"
-                    ref="file"
-                    class="form-control"
-                    accept="image/*"
-                    v-on:change="handleFileUpload()"
-                  />
-                </label>
-                <img
-                  v-bind:src="imagePreview"
-                  class="img img-fluid"
-                  style="max-height: 200px"
-                  v-show="showPreview"
+                <input
+                  type="file"
+                  id="file"
+                  ref="filee"
+                  class="form-control"
+                  accept="image/*"
+                  @change="onFileSelected"
+                  required
                 />
               </div>
 
@@ -175,22 +167,21 @@
               enctype="multipart/form-data"
             >
               <div class="form-group text-left">
-                <label
-                  >File Preview
-                  <input
-                    type="file"
-                    id="file"
-                    ref="file"
-                    class="form-control"
-                    accept="image/*"
-                    v-on:change="handleFileUpload2()"
-                  />
-                </label>
                 <img
-                  v-bind:src="imagePreview2"
-                  class="img img-fluid"
-                  style="max-height: 200px"
-                  v-show="showPreview"
+                  class="img img-fluid w-75 m-auto border-0 form-control"
+                  alt="Tea-ana-product"
+                  style="height: auto"
+                  :src="path + eachofsupp.imagePath"
+                  fluid
+                />
+                <input
+                  type="file"
+                  id="file"
+                  ref="filee"
+                  class="form-control"
+                  accept="image/*"
+                  @change="onFileSelected2"
+                  required
                 />
               </div>
 
@@ -327,41 +318,27 @@ export default {
       val: null,
       type: null,
       path: "https://api.tea-ana.com/uploads/",
-
-      showPreview: false,
-      imagePreview: "",
-      imagePreview2: "",
     };
   },
+  async created() {
+    // fetch the data pag ka load
+    this.getSupplies();
+  },
   methods: {
-    onFileSelected(event) {
-      this.imagePath = event.target.files[0];
-      console.log(event.target.files[0]);
-    },
     handleFileUpload() {
       /*
       Set the local file variable to what the user has selected.
     */
       this.imagePath = this.$refs.file.files[0];
-
       /*
       Initialize a File Reader object
     */
       let reader = new FileReader();
-
       /*
       Add an event listener to the reader that when the file
       has been loaded, we flag the show preview as true and set the
       image to be what was read from the reader.
     */
-      reader.addEventListener(
-        "load",
-        function () {
-          this.showPreview = true;
-          this.imagePreview = reader.result;
-        }.bind(this),
-        false
-      );
 
       /*
       Check to see if the file is not empty.
@@ -380,90 +357,30 @@ export default {
         }
       }
     },
-    handleFileUpload2() {
-      /*
-      Set the local file variable to what the user has selected.
-    */
-      this.eachofsupp.imagePath = this.$refs.file.files[0];
-
-      /*
-      Initialize a File Reader object
-    */
-      let reader = new FileReader();
-
-      /*
-      Add an event listener to the reader that when the file
-      has been loaded, we flag the show preview as true and set the
-      image to be what was read from the reader.
-    */
-      reader.addEventListener(
-        "load",
-        function () {
-          this.showPreview = true;
-          this.imagePreview2 = reader.result;
-        }.bind(this),
-        false
-      );
-
-      /*
-      Check to see if the file is not empty.
-    */
-      if (this.eachofsupp.imagePath) {
-        /*
-        Ensure the file is an image file.
-      */
-        if (/\.(jpe?g|png|gif)$/i.test(this.eachofsupp.imagePath.name)) {
-          /*
-          Fire the readAsDataURL method which will read the file in and
-          upon completion fire a 'load' event which we will listen to and
-          display the image in the preview.
-        */
-          reader.readAsDataURL(this.eachofsupp.imagePath);
-        }
-      }
+    onFileSelected(event) {
+      this.imagePath = event.target.files[0];
+      console.log(event);
     },
+    onFileSelected2(event) {
+      this.imagePath = event.target.files[0];
+      console.log(event);
+    },
+
     insertSupply: async function () {
       const formData = new FormData();
       formData.append("name", this.name);
       formData.append("price", this.price);
       formData.append("categoryId", this.categoryId);
       formData.append("type", this.type);
-
-      formData.append("file", this.imagePath);
+      formData.append("file", this.imagePath, this.imagePath.name);
 
       axios
-        .post(
-          "https://api.tea-ana.com/v1/supplies",
-          formData,
-
-          /* {
-            name: this.name,
-            price: this.price,
-            categoryId: this.categoryId,
-            type: this.type,
-            imagePath: formData,
-          }, */
-          /*  {
-            headers: {
-              "Content-Type":
-                "multipart/form-data;charset=utf-8 boundary --- WebKit193844043-h; name=imagePath",
-            },
-          }, */
-
-          {
-            onUploadProgress: (uploadEvent) => {
-              console.log(
-                "Upload Progress" +
-                  Math.round((uploadEvent.loaded / uploadEvent.total) * 100) +
-                  "%"
-              );
-            },
-          }
-        )
+        .post("https://api.tea-ana.com/v1/supplies", formData)
         .then((response) => {
           console.log(response);
           $("#newSupplies").modal("hide");
           swal("Record Created!", "New changes are applied!", "success");
+          this.getSupplies();
         })
         .catch((error) => {
           console.log(error.response);
@@ -495,13 +412,14 @@ export default {
       formData.append("categoryId", this.eachofsupp.categoryId);
       formData.append("type", this.eachofsupp.type);
 
-      formData.append("file", this.eachofsupp.imagePath);
+      formData.append("file", this.imagePath, this.imagePath.name);
       axios
         .put("https://api.tea-ana.com/v1/supplies/" + id, formData)
         .then((response) => {
           console.log(response.data.data);
           $("#upSupplies").modal("hide");
           swal("Record Updated!", "New changes are applied!", "success");
+          this.getSupplies();
         })
         .catch((error) => {
           console.log(error.response);
@@ -514,17 +432,12 @@ export default {
         .then((response) => {
           console.log(response.data.data);
           swal("Record Delete!", "New changes are applied!", "success");
+          this.getSupplies();
         })
         .catch((err) => {
           console.error(err);
         });
     },
-  },
-
-  computed: {},
-  async created() {
-    // fetch the data pag ka load
-    this.getSupplies();
   },
 };
 </script>
