@@ -69,12 +69,19 @@
                 <input
                   type="file"
                   id="file"
-                  ref="filee"
+                  ref="fileInput"
                   class="form-control"
+                  style="display: none"
                   accept="image/*"
                   @change="onFileSelected"
                   required
                 />
+                <button
+                  @click="$refs.fileInput.click()"
+                  class="form-control btn btn-sm btn-success"
+                >
+                  Click to add image
+                </button>
               </div>
 
               <div class="form-group text-left">
@@ -170,19 +177,26 @@
                 <img
                   class="img img-fluid w-75 m-auto border-0 form-control"
                   alt="Tea-ana-product"
-                  style="height: auto"
+                  style="height: 250px; width: 250px"
                   :src="path + eachofsupp.imagePath"
                   fluid
                 />
                 <input
                   type="file"
                   id="file"
-                  ref="filee"
+                  ref="fileInput"
                   class="form-control"
+                  style="display: none"
                   accept="image/*"
                   @change="onFileSelected2"
                   required
                 />
+                <button
+                  @click="$refs.fileInput.click()"
+                  class="form-control btn btn-sm btn-success"
+                >
+                  Click to change image
+                </button>
               </div>
 
               <div class="form-group text-left">
