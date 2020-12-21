@@ -139,7 +139,7 @@
             </button>
           </div>
           <div class="modal-body">
-            <form>
+            <form method="post" @submit.prevent="updateAddon(eachofaddon.id)">
               <div class="form-group text-left">
                 <small class="pb-3">Addon Name</small>
                 <input
@@ -162,7 +162,6 @@
                 <small class="pb-3">Addon type</small>
                 <select
                   v-model.number="eachofaddon.category_id"
-                  @change="onChange"
                   class="form-control custom-select"
                   required
                 >
@@ -180,8 +179,7 @@
 
               <div class="form-group">
                 <input
-                  type="button"
-                  @click="updateAddon(eachofaddon.id)"
+                  type="submit"
                   class="btn btn-sm float-right pl-3 pr-3 text-white"
                   style="background-color: #028476; border-radius: 20px"
                   value="update"
@@ -258,11 +256,12 @@ export default {
       categories: [],
     };
   },
+  async created() {
+    // fetch the data pag ka load
+    this.getAddons();
+    this.getCategory();
+  },
   methods: {
-    onChange(event) {
-      console.log(event.target.value);
-    },
-
     /* fetch */
     async getAddons() {
       let response = await axios.get(
@@ -301,7 +300,7 @@ export default {
         });
     },
     /* update */
-    updateAddon: function (id) {
+    updateAddon: async function (id) {
       axios
         .put("https://api.tea-ana.com/v1/addons/" + id, {
           name: this.eachofaddon.name,
@@ -312,18 +311,21 @@ export default {
           console.log(response);
           $("#upAddons").modal("hide");
           swal("Record Updated!", "New changes are applied!", "success");
+          this.getAddons();
+          this.getCategory();
         })
         .catch((error) => {
           console.log(error.response);
         });
     },
     /* delete */
-    async deleteddon(id) {
+    deleteAddon: async function (id) {
       axios
         .delete(`https://api.tea-ana.com/v1/addons/` + id)
         .then((res) => {
           console.log(res);
           swal("Record Delete!", "New changes are applied!", "success");
+          this.getAddons();
         })
         .catch((err) => {
           console.error(err);
@@ -337,12 +339,6 @@ export default {
       this.categories = response.data.data;
       console.log(this.categories);
     },
-  },
-  computed: {},
-  async created() {
-    // fetch the data pag ka load
-    this.getAddons();
-    this.getCategory();
   },
 };
 </script>

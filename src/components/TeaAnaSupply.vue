@@ -69,19 +69,14 @@
                 <input
                   type="file"
                   id="file"
-                  ref="fileInput"
-                  class="form-control"
-                  style="display: none"
+                  ref="fileupload"
                   accept="image/*"
                   @change="onFileSelected"
                   required
+                  class="form-control-file"
+                  aria-describedby="inputGroupFileAddon04"
+                  aria-label="Upload"
                 />
-                <button
-                  @click="$refs.fileInput.click()"
-                  class="form-control btn btn-sm btn-success"
-                >
-                  Click to add image
-                </button>
               </div>
 
               <div class="form-group text-left">
@@ -133,6 +128,7 @@
               <div class="form-group">
                 <input
                   type="submit"
+                  v-if="savebtn"
                   class="btn btn-sm float-right pl-3 pr-3 text-white"
                   style="background-color: #028476; border-radius: 20px"
                   value="create"
@@ -169,6 +165,7 @@
           </div>
           <div class="modal-body">
             <form
+              v-if="savebtn"
               method="post"
               @submit.prevent="updateSupply(eachofsupp.id)"
               enctype="multipart/form-data"
@@ -181,22 +178,18 @@
                   :src="path + eachofsupp.imagePath"
                   fluid
                 />
+
                 <input
                   type="file"
                   id="file"
-                  ref="fileInput"
-                  class="form-control"
-                  style="display: none"
+                  ref="fileupload"
                   accept="image/*"
                   @change="onFileSelected2"
                   required
+                  class="form-control-file"
+                  aria-describedby="inputGroupFileAddon04"
+                  aria-label="Upload"
                 />
-                <button
-                  @click="$refs.fileInput.click()"
-                  class="form-control btn btn-sm btn-success"
-                >
-                  Click to change image
-                </button>
               </div>
 
               <div class="form-group text-left">
@@ -310,10 +303,6 @@
         </tbody>
       </table>
     </div>
-
-    <!-- update per supply -->
-
-    <!--end of update per supply -->
   </section>
 </template>
 <script>
@@ -325,11 +314,11 @@ export default {
     return {
       supplies: [],
       eachofsupp: [],
+      savebtn: true,
       name: null,
       price: null,
       imagePath: null,
       categoryId: null,
-      val: null,
       type: null,
       path: "https://api.tea-ana.com/uploads/",
     };
@@ -339,38 +328,6 @@ export default {
     this.getSupplies();
   },
   methods: {
-    handleFileUpload() {
-      /*
-      Set the local file variable to what the user has selected.
-    */
-      this.imagePath = this.$refs.file.files[0];
-      /*
-      Initialize a File Reader object
-    */
-      let reader = new FileReader();
-      /*
-      Add an event listener to the reader that when the file
-      has been loaded, we flag the show preview as true and set the
-      image to be what was read from the reader.
-    */
-
-      /*
-      Check to see if the file is not empty.
-    */
-      if (this.imagePath) {
-        /*
-        Ensure the file is an image file.
-      */
-        if (/\.(jpe?g|png|gif)$/i.test(this.imagePath.name)) {
-          /*
-          Fire the readAsDataURL method which will read the file in and
-          upon completion fire a 'load' event which we will listen to and
-          display the image in the preview.
-        */
-          reader.readAsDataURL(this.imagePath);
-        }
-      }
-    },
     onFileSelected(event) {
       this.imagePath = event.target.files[0];
       console.log(event);
@@ -395,6 +352,7 @@ export default {
           $("#newSupplies").modal("hide");
           swal("Record Created!", "New changes are applied!", "success");
           this.getSupplies();
+          this.clear();
         })
         .catch((error) => {
           console.log(error.response);
@@ -434,6 +392,7 @@ export default {
           $("#upSupplies").modal("hide");
           swal("Record Updated!", "New changes are applied!", "success");
           this.getSupplies();
+          this.clear();
         })
         .catch((error) => {
           console.log(error.response);
@@ -451,6 +410,14 @@ export default {
         .catch((err) => {
           console.error(err);
         });
+    },
+    clear: function () {
+      (this.savebtn = true),
+        (this.name = ""),
+        (this.price = ""),
+        (this.categoryId = ""),
+        (this.type = "");
+      this.$refs.fileupload.value = null;
     },
   },
 };

@@ -63,16 +63,22 @@
               @submit.prevent="insertProduct"
               enctype="multipart/form-data"
               method="post"
+              v-if="savebtn"
             >
               <div class="form-group text-left">
-                <small class="pb-3">Product Name</small>
                 <input
                   type="file"
-                  ref="uploadBtn"
-                  class="form-control"
-                  :required="true"
+                  id="file"
+                  ref="fileupload"
+                  accept="image/*"
+                  @change="onFileSelected"
+                  required
+                  class="form-control-file"
+                  aria-describedby="inputGroupFileAddon04"
+                  aria-label="Upload"
                 />
               </div>
+
               <div class="form-group text-left">
                 <small class="pb-3">Product Name</small>
 
@@ -91,7 +97,6 @@
                   type="number"
                   class="form-control"
                   v-model.number="price"
-                  @input="handleInput"
                 />
               </div>
 
@@ -157,7 +162,25 @@
             </button>
           </div>
           <div class="modal-body">
-            <form>
+            <form
+              @submit.prevent="updateProduct(eachofprods.id)"
+              enctype="multipart/form-data"
+              method="post"
+              v-if="savebtn"
+            >
+              <div class="form-group text-left">
+                <input
+                  type="file"
+                  id="file"
+                  ref="fileupload"
+                  accept="image/*"
+                  @change="onFileSelected"
+                  required
+                  class="form-control-file"
+                  aria-describedby="inputGroupFileAddon04"
+                  aria-label="Upload"
+                />
+              </div>
               <div class="form-group text-left">
                 <small class="pb-3">Product Name</small>
                 <input
@@ -173,7 +196,6 @@
                   type="number"
                   class="form-control"
                   v-model.number="eachofprods.price"
-                  @input="handleInput"
                 />
               </div>
 
@@ -204,8 +226,7 @@
               </div>
               <div class="form-group">
                 <input
-                  type="button"
-                  @click="updateProduct(eachofprods.id)"
+                  type="submit"
                   class="btn btn-sm float-right pl-3 pr-3 text-white"
                   style="background-color: #028476; border-radius: 20px"
                   value="update"
@@ -287,31 +308,26 @@ export default {
       categories: [],
       products: [],
       eachofprods: [],
+
       name: null,
       price: null,
       category_id: null,
-      val: null,
       productType: null,
       imagePath: null,
-      selectedimage: null,
+
       path: "https://api.tea-ana.com/uploads/",
+      savebtn: true,
     };
+  },
+  async created() {
+    // fetch the data pag ka load
+    this.getProducts();
   },
 
   methods: {
-    onChange(event) {
-      console.log(event.target.value);
-    },
-
-    watchSelectedItemId: function (event) {
-      console.log(
-        event.target.options[event.target.selectedIndex].attributes[
-          "data-item-type"
-        ].value
-      );
-    },
-    handleInput(e) {
-      this.val = e.target.value.replace(/[^\d]/g, "");
+    onFileSelected(event) {
+      this.imagePath = event.target.files[0];
+      console.log(event);
     },
 
     async eachProduct(id) {
@@ -330,50 +346,41 @@ export default {
       console.log(this.products);
     },
     insertProduct: async function () {
-      let files = this.$refs.uploadBtn.files;
-      let formData = new FormData();
-      formData.append("imagePath", files[0]);
+      const formData = new FormData();
+      formData.append("name", this.name);
+      formData.append("price", this.price);
+      formData.append("category_id", this.category_id);
+      formData.append("productType", this.productType);
+      formData.append("file", this.imagePath, this.imagePath.name);
       axios
-        .post(
-          "https://api.tea-ana.com/v1/products",
-          {
-            name: this.name,
-            price: this.price,
-            category_id: this.category_id,
-
-            productType: this.productType,
-            imagePath: formData,
-          },
-          {
-            headers: {
-              "Content-Type":
-                "multipart/form-datal boundary=----WebKitFormBoundary5g0xJihuBbfw8DEp",
-            },
-          }
-        )
+        .post("https://api.tea-ana.com/v1/products", formData)
         .then((response) => {
           console.log(response);
           $("#newproducts").modal("hide");
           swal("Record Added!", "New changes are applied!", "success");
-          this.$router.push("/teaana-products");
+          this.getProducts();
+          this.clear();
         })
         .catch((error) => {
           console.log(error.response);
         });
     },
     updateProduct: function (id) {
+      const formData = new FormData();
+      formData.append("name", this.eachofprods.name);
+      formData.append("price", this.eachofprods.price);
+      formData.append("category_id", this.eachofprods.category_id);
+      formData.append("productType", this.eachofprods.productType);
+      formData.append("file", this.imagePath, this.imagePath.name);
+
       axios
-        .put("https://api.tea-ana.com/v1/products/" + id, {
-          name: this.eachofprods.name,
-          price: this.eachofprods.price,
-          productType: this.eachofprods.productType,
-          category_id: this.eachofprods.category_id,
-        })
+        .put("https://api.tea-ana.com/v1/products/" + id, formData)
         .then((response) => {
           console.log(response);
           $("#upProducts").modal("hide");
 
           swal("Record Updated!", "New changes are applied!", "success");
+          this.getProducts();
         })
         .catch((error) => {
           console.log(error.response);
@@ -386,17 +393,20 @@ export default {
         .then((res) => {
           console.log(res);
           swal("Record Deleted!", "New changes are applied!", "success");
-          window.location.href = "teaana-products";
+          this.getProducts();
         })
         .catch((err) => {
           console.error(err);
         });
     },
-  },
-  computed: {},
-  async created() {
-    // fetch the data pag ka load
-    this.getProducts();
+    clear: function () {
+      (this.savebtn = true),
+        (this.name = ""),
+        (this.price = ""),
+        (this.category_id = ""),
+        (this.productType = "");
+      this.$refs.fileupload.value = null;
+    },
   },
 };
 </script>

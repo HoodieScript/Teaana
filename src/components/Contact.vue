@@ -15,7 +15,11 @@
           <div
             class="col-lg-6 form my-auto mx-auto d-flex justify-content-center"
           >
-            <form class="w-75 align-content-center">
+            <form
+              method="post"
+              @submit.prevent="contactUs"
+              class="w-75 align-content-center"
+            >
               <h2 class="text-center">Any thoughts? Message us</h2>
               <div class="form-group">
                 <input
@@ -40,8 +44,8 @@
               </div>
 
               <input
-                type="button"
-                @click="contactUs()"
+                v-if="savebtn"
+                type="submit"
                 class="btn btn-sm float-right pl-3 pr-3 text-white"
                 style="background-color: #028476; border-radius: 20px"
                 value="Send"
@@ -62,6 +66,7 @@ export default {
     return {
       email: "",
       message: "",
+      savebtn: true,
     };
   },
   methods: {
@@ -71,12 +76,15 @@ export default {
         message: this.message,
       });
       console.log(data);
-
+      this.clear();
       swal(
         "Message sent!",
         "Thank you for letting us know your concern!",
         "success"
       );
+    },
+    clear: function () {
+      (this.savebtn = true), (this.email = ""), (this.message = "");
     },
   },
 };
