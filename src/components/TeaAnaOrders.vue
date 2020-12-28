@@ -78,9 +78,8 @@
                     required
                   >
                     <option value="Pending" disabled>Pending</option>
-                    <option value="Confirmed">Confirmed</option>
-                    <option value="Canceled">Canceled</option>
-                    <option value="Delivered">Delivered</option>
+                    <option value="1">Confirmed</option>
+                    <option value="2">Canceled</option>
                   </select>
                 </div>
               </div>
@@ -196,6 +195,10 @@ export default {
       supply: null,
     };
   },
+  async created() {
+    // fetch the data pag ka load
+    this.getOrders();
+  },
   methods: {
     onChange(event) {
       console.log(event.target.value);
@@ -228,6 +231,7 @@ export default {
           console.log(response.data.data);
           $("#upOrders").modal("hide");
           swal("Record Updated!", "New changes are applied!", "success");
+          this.getOrders();
         })
         .catch((error) => {
           console.log(error.response);
@@ -236,10 +240,6 @@ export default {
   },
 
   computed: {},
-  async created() {
-    // fetch the data pag ka load
-    this.getOrders();
-  },
 };
 </script>
 <style scoped>

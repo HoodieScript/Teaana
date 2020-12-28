@@ -2,8 +2,6 @@
   <div>
     <NavBar />
     <Landing id="banner-section" />
-    <Login />
-    <Register />
     <Product id="product-section" />
     <Gallery id="about-section" />
     <Contact id="contact-section" />
@@ -15,8 +13,6 @@
 </template>
 <script>
 import NavBar from "@/components/NavBar.vue";
-import Login from "@/components/Login.vue";
-import Register from "@/components/Register.vue";
 import Landing from "@/components/Landing.vue";
 import Product from "@/components/Product.vue";
 import Gallery from "@/components/Gallery.vue";
@@ -63,8 +59,6 @@ import TermsandConditions from "@/components/TermsCondition.vue";
   components: {
     NavBar,
     Landing,
-    Login,
-    Register,
     Product,
     Gallery,
     Contact,

@@ -83,7 +83,6 @@
 <script>
 import axios from "axios";
 import swal from "sweetalert";
-import $ from "jquery";
 
 axios.defaults.withCredentials = true;
 
@@ -108,22 +107,13 @@ export default {
         )
         .then((response) => {
           console.log(response.data.data);
-          $("#Registermodal").modal("hide");
           swal(
             "Account Signed-in!",
             "You can now access admin panel!",
             "success"
           );
-          /*           alert(`Token received: ${response.data.token}`);
-          localStorage.setItem("token", response.data.token);
- */
-          /*           window.location.href = "teaana-customer";
-          
-           */
           this.$store.commit("setAuthentication", true);
           this.$router.replace({ name: "StoredCustomers" });
-          /*           this.$router.push({ name: "teaana-customer" });
-           */
         })
         .catch((error) => {
           console.log(error.response);

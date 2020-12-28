@@ -1,8 +1,6 @@
 <template>
   <div>
     <Navbar2 />
-    <Login />
-    <Register />
     <Supply />
     <Contact />
     <Footer />
@@ -13,8 +11,6 @@
 </template>
 <script>
 import Navbar2 from "@/components/NavBar2.vue";
-import Login from "@/components/Login.vue";
-import Register from "@/components/Register.vue";
 import Supply from "@/components/SupplyList.vue";
 import Contact from "@/components/Contact.vue";
 import Footer from "@/components/NavFooter.vue";
@@ -47,8 +43,7 @@ export default {
   components: {
     Navbar2,
     Supply,
-    Login,
-    Register,
+
     Contact,
     Footer,
     PrivacyPolicy,

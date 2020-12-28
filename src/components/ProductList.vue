@@ -72,7 +72,7 @@
                 data-target="#product-cart"
                 class="align-self-center float-right p-0 btn btn-md"
                 style="color: #5cd85c"
-                @click="orderProduct(product.id)"
+                @click="eachProduct(product.id)"
               >
                 <i class="fas fa-shopping-cart"></i>
               </button>
@@ -108,7 +108,7 @@
               </button>
             </div>
             <div class="modal-body product-data">
-              <form class="row">
+              <form class="row" method="post" @submit.prevent="insertOrder">
                 <div class="col-lg-7 border-right">
                   <div class="input-group">
                     <input
@@ -116,10 +116,10 @@
                       readonly
                       class="form-control text-center bg-white font-weight-bold"
                       style="color: #028476; border: none"
-                      placeholder="Username"
-                      aria-label="Username"
+                      placeholder="Name"
+                      aria-label="Name"
                       aria-describedby="basic-addon1"
-                      v-model="addorders.name"
+                      v-model="eachorder.name"
                     />
                   </div>
                   <figure>
@@ -128,6 +128,7 @@
                       alt="Tea-ana-product"
                       style="height: auto"
                       fluid
+                      :src="path + eachorder.imagePath"
                     />
                   </figure>
                 </div>
@@ -136,18 +137,15 @@
                   <div class="form-group">
                     <select
                       class="form-control custom-select mb-2"
-                      v-for="item in addorders.options"
-                      :key="item"
+                      v-for="(option, idx) in eachorder.options"
+                      :key="idx"
                     >
-                      <option selected>{{ item.name }}</option>
-                      <option
-                        v-for="valitem in item.values"
-                        :key="valitem"
-                        value="valitem.price"
-                      >
-                        {{ valitem.name }}
+                      <option>{{ option.name }}</option>
+                      <option v-for="(opt, idx) in option.values" :key="idx">
+                        {{ opt.name }}
                       </option>
                     </select>
+
                     <input
                       type="number"
                       class="form-control"
@@ -155,29 +153,21 @@
                       min="1"
                       v-model="quantity"
                     />
-                  </div>
 
-                  <div
-                    class="input-group"
-                    v-for="addon in addorders.addons"
-                    :key="addon"
-                  >
-                    <div class="input-group-prepend">
-                      <div class="input-group-text bg-transparent border-0">
+                    <ul>
+                      <div
+                        class="form-group"
+                        v-for="(addon, idx) in eachorder.addons"
+                        :key="idx"
+                      >
                         <input
+                          class="form-control"
                           type="checkbox"
-                          aria-label="Checkbox for following text input "
-                          v-model.number="addon.price"
-                        />
+                          v-model.number="add"
+                          :value="addon.price"
+                        />{{ addon.name }} - {{ addon.price }}
                       </div>
-                    </div>
-                    <input
-                      type="text"
-                      class="form-control border-0"
-                      aria-label="Text input with checkbox "
-                      v-model="addon.name"
-                    />
-                    <small class="my-auto"> ₱ {{ addon.price }}</small>
+                    </ul>
                   </div>
 
                   <hr />
@@ -194,7 +184,7 @@
                     />
                   </div>
 
-                  <small>Price varies on selected order {{ SumAddons }}</small>
+                  <small>Price varies on selected order</small>
                   <div class="input-group mt-3">
                     <input
                       type="submit"
@@ -214,16 +204,16 @@
 </template>
 <script>
 import axios from "axios";
-
-export default {
+/* import $ from "jquery";
+ */ export default {
   data() {
     return {
       quantity: 1,
-      addorders: [],
+      eachorder: [],
       total: null,
       subtotal: [],
       //v-model for filters
-      movetocartbtn: false,
+      selectedaddons: [],
       addons: [],
       search: "",
       category: null,
@@ -232,6 +222,7 @@ export default {
       products: [],
       imagePath: null,
       pagination: [],
+      add: [],
 
       //File Path
       path: "https://api.tea-ana.com/uploads/",
@@ -264,6 +255,9 @@ export default {
   },
 
   methods: {
+    check: function () {
+      console.log(this.checkedCategories);
+    },
     async getProducts() {
       let response = await axios.get(
         "https://api.tea-ana.com/v1/products?select=id,name,price,productType,imagePath,category_id" //endpoint
@@ -272,13 +266,13 @@ export default {
       console.log(this.products);
     },
 
-    async orderProduct(id) {
+    async eachProduct(id) {
       axios
         .get(`https://api.tea-ana.com/v1/products/` + id)
         .then((response) => {
-          this.addorders = response.data.data;
+          this.eachorder = response.data.data;
         });
-      console.log(this.addorders);
+      console.log(this.eachorder);
     },
   },
   async created() {
@@ -321,10 +315,6 @@ export default {
           console.log(2);
           return el.category_id == this.category;
         }
-
-        /*   if (this.search == null ||
-          (this.search == "" && this.category != null)) { */
-        //return el.category_id == this.category && el.productType == this.type;
       });
 
       if (this.sort != null) {
@@ -341,16 +331,23 @@ export default {
       //returns filted data
       return data;
     },
+
     TotalValue: function () {
-      let total = this.addorders.price * this.quantity;
-      return total;
-    },
-    SumAddons() {
-      return this.addons.reduce((acc, addon) => {
-        return acc + parseInt(addon.price);
-      }, 0);
+      let total = parseFloat(this.eachorder.price) * parseFloat(this.quantity);
+      let sum = 0;
+      for (let i = 0; i < this.add.length; i++) {
+        sum += parseFloat(this.add[i]);
+      }
+
+      console.log(this.add);
+      return total + sum;
+
+      /* 
+      let total = this.eachorder.price * this.quantity + this.add;
+      return total; */
     },
   },
+  mounted: {},
 };
 </script>
 <!--SZ Add "scoped" attribute to limit CSS to this component only -->

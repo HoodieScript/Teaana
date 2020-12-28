@@ -85,7 +85,7 @@
                   >
                     <i class="far fa-edit"></i>
                   </button>
-                  <button class="btn" @click="Deletecart(cartlist.cartitem_id)">
+                  <button class="btn" @click="Deletecart(cartlist.id)">
                     <i class="far fa-times-circle"></i>
                   </button>
                 </td>
@@ -183,6 +183,9 @@ export default {
       total: null,
     };
   },
+  async created() {
+    this.getSuppliescart();
+  },
   methods: {
     getProfile: async function () {
       try {
@@ -213,6 +216,7 @@ export default {
           console.error(err);
         });
     },
+
     async eachCart(cartitem_id) {
       axios
         .get(`https://api.tea-ana.com/v1/cart/supplies/item/` + cartitem_id)
@@ -220,6 +224,13 @@ export default {
           this.eachofcart = response.data.cart;
         });
       console.log(this.eachofcart);
+    },
+    updatecart: async function (cartitem_id) {
+      axios
+        .get(`https://api.tea-ana.com/v1/cart/supplies/item/` + cartitem_id)
+        .then((response) => {
+          this.eachofcart = response.data.cart;
+        });
     },
     Paymentsubmit: async function () {
       axios
@@ -231,7 +242,12 @@ export default {
         .then((response) => {
           console.log(response);
           $("#product-cart").modal("hide");
-          swal("Thank you!", "Your Order has succcessfully Added !", "success");
+          swal(
+            "Thank you!",
+            "Waiting for Order Confirmation. Please see your order in your Profile !",
+            "success"
+          );
+          this.getSuppliescart();
         })
         .catch((error) => {
           console.log(error.response);
@@ -249,20 +265,8 @@ export default {
       return sum;
     },
   },
-  async created() {
-    this.getSuppliescart();
-  },
-  mounted() {
-    $("input.number").keyup(function (event) {
-      // skip for arrow keys
-      if (event.which >= 37 && event.which <= 40) return;
 
-      // format number
-      $(this).val(function (index, value) {
-        return value.replace(/\D/g, "").replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-      });
-    });
-  },
+  mounted() {},
 };
 </script>
 

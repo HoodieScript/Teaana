@@ -169,18 +169,27 @@
               v-if="savebtn"
             >
               <div class="form-group text-left">
+                <img
+                  class="img img-fluid w-75 m-auto border-0 form-control"
+                  alt="Tea-ana-product"
+                  style="height: 250px; width: 250px"
+                  :src="path + eachofprods.imagePath"
+                  fluid
+                />
+
                 <input
                   type="file"
                   id="file"
                   ref="fileupload"
                   accept="image/*"
-                  @change="onFileSelected"
+                  @change="onFileSelected2"
                   required
                   class="form-control-file"
                   aria-describedby="inputGroupFileAddon04"
                   aria-label="Upload"
                 />
               </div>
+
               <div class="form-group text-left">
                 <small class="pb-3">Product Name</small>
                 <input
@@ -326,6 +335,10 @@ export default {
 
   methods: {
     onFileSelected(event) {
+      this.imagePath = event.target.files[0];
+      console.log(event);
+    },
+    onFileSelected2(event) {
       this.imagePath = event.target.files[0];
       console.log(event);
     },

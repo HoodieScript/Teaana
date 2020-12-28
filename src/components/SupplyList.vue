@@ -68,7 +68,7 @@
                 data-target="#product-cart"
                 class="align-self-center float-right p-0 btn btn-md"
                 style="color: #5cd85c"
-                @click="orderProduct(supply.id)"
+                @click="orderSupply(supply.id)"
               >
                 <i class="fas fa-shopping-cart"></i>
               </button>
@@ -104,7 +104,7 @@
               </button>
             </div>
             <div class="modal-body product-data">
-              <form class="row">
+              <form class="row" method="post" @submit.prevent="insertOrder">
                 <div class="col-lg-7 border-right">
                   <div class="input-group">
                     <input type="hidden" v-model="addorders.id" />
@@ -123,8 +123,8 @@
                     <img
                       class="img img-fluid w-75 m-auto border-0 form-control"
                       alt="Tea-ana-product"
-                      style="height: auto"
-                      :src="path + imagePath"
+                      style="height: 300px; width: 200px"
+                      :src="path + addorders.imagePath"
                       fluid
                     />
                   </figure>
@@ -158,11 +158,10 @@
                   <small>Price varies on selected order </small>
                   <div class="input-group mt-3">
                     <input
-                      type="button"
+                      type="submit"
                       value="Add to cart"
                       class="mx-auto w-50 btn btn-sm text-white"
                       style="background-color: #028476"
-                      @click="insertOrder()"
                     />
                   </div>
                 </div>
@@ -225,7 +224,7 @@ export default {
       console.log(this.supplies);
     },
 
-    async orderProduct(id) {
+    async orderSupply(id) {
       axios
         .get(`https://api.tea-ana.com/v1/supplies/` + id)
         .then((response) => {

@@ -294,6 +294,7 @@ export default {
           console.log(response);
           $("#newAddons").modal("hide");
           swal("Record Created!", "New changes are applied!", "success");
+          this.getAddons();
         })
         .catch((error) => {
           console.log(error.response);
@@ -312,7 +313,6 @@ export default {
           $("#upAddons").modal("hide");
           swal("Record Updated!", "New changes are applied!", "success");
           this.getAddons();
-          this.getCategory();
         })
         .catch((error) => {
           console.log(error.response);
