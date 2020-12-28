@@ -154,20 +154,21 @@
                       v-model="quantity"
                     />
 
-                    <ul>
-                      <div
-                        class="form-group"
-                        v-for="(addon, idx) in eachorder.addons"
-                        :key="idx"
-                      >
-                        <input
-                          class="form-control"
-                          type="checkbox"
-                          v-model.number="add"
-                          :value="addon.price"
-                        />{{ addon.name }} - {{ addon.price }}
-                      </div>
-                    </ul>
+                    <div
+                      class="form-check form-control d-flex justify-content-start border-0"
+                      v-for="(addon, idx) in eachorder.addons"
+                      :key="idx"
+                    >
+                      <input
+                        class="form-check-input"
+                        type="checkbox"
+                        v-model.number="add"
+                        v-bind:value="addon.price"
+                      />
+                      <label class="form-check-label" for="exampleCheck1"
+                        >{{ addon.name }} ₱{{ addon.price }}
+                      </label>
+                    </div>
                   </div>
 
                   <hr />
@@ -335,6 +336,7 @@ import axios from "axios";
     TotalValue: function () {
       let total = parseFloat(this.eachorder.price) * parseFloat(this.quantity);
       let sum = 0;
+
       for (let i = 0; i < this.add.length; i++) {
         sum += parseFloat(this.add[i]);
       }
@@ -343,8 +345,11 @@ import axios from "axios";
       return total + sum;
 
       /* 
-      let total = this.eachorder.price * this.quantity + this.add;
-      return total; */
+      let total = parseInt(this.eachorder.price) * parseInt(this.quantity);
+      let sum = this.add.reduce(function (a, b) {
+        return parseInt(a) + parseInt(b);
+      }, 0);
+      return total + sum; */
     },
   },
   mounted: {},
