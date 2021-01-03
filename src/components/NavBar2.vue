@@ -236,9 +236,9 @@
 </template>
 
 <script>
-import $ from "jquery";
 import axios from "axios";
 import swal from "sweetalert";
+import $ from "jquery";
 //allows cookies
 
 axios.defaults.withCredentials = true;
