@@ -153,26 +153,29 @@
                       min="1"
                       v-model="quantity"
                     />
+                  </div>
 
-                    <div
-                      class="form-check form-control d-flex justify-content-start border-0"
-                      v-for="(addon, idx) in eachorder.addons"
-                      :key="idx"
-                    >
-                      <input
-                        class="form-check-input"
-                        type="checkbox"
-                        v-model.number="add"
-                        v-bind:value="addon.price"
-                      />
-                      <label class="form-check-label" for="exampleCheck1"
-                        >{{ addon.name }} ₱{{ addon.price }}
-                      </label>
-                    </div>
+                  <div
+                    class="form-check form-control d-flex justify-content-start border-0"
+                    v-for="(addon, idx) in eachorder.addons"
+                    :key="idx"
+                  >
+                    <input
+                      class="form-check-input"
+                      type="checkbox"
+                      :id="addon.id"
+                      v-bind:value="addon.price"
+                      v-on:input="updateVals($event.target.value)"
+                    />
+
+                    <label class="form-check-label" for="exampleCheck1"
+                      >{{ addon.name }} ₱{{ addon.price }}
+                    </label>
                   </div>
 
                   <hr />
-                  <div class="input-group">
+                  <div class="form-group" v-if="TotalValue > 0">
+                    <p class="text-center">Price varies on selected order</p>
                     <input
                       type="text"
                       readonly
@@ -185,8 +188,7 @@
                     />
                   </div>
 
-                  <small>Price varies on selected order</small>
-                  <div class="input-group mt-3">
+                  <div class="input-group mt-3" v-if="TotalValue > 0">
                     <input
                       type="submit"
                       value="Add to cart"
@@ -214,8 +216,8 @@ import axios from "axios";
       total: null,
       subtotal: [],
       //v-model for filters
-      selectedaddons: [],
       addons: [],
+
       search: "",
       category: null,
       type: null,
@@ -256,9 +258,6 @@ import axios from "axios";
   },
 
   methods: {
-    check: function () {
-      console.log(this.checkedCategories);
-    },
     async getProducts() {
       let response = await axios.get(
         "https://api.tea-ana.com/v1/products?select=id,name,price,productType,imagePath,category_id" //endpoint
@@ -267,13 +266,29 @@ import axios from "axios";
       console.log(this.products);
     },
 
-    async eachProduct(id) {
+    eachProduct: async function (id) {
       axios
         .get(`https://api.tea-ana.com/v1/products/` + id)
         .then((response) => {
           this.eachorder = response.data.data;
         });
       console.log(this.eachorder);
+    },
+    insertOrder: async function () {
+      axios.post("https://api.tea-ana.com/v1/cart", {});
+    },
+    updateVals(val) {
+      /* if (this.add.findIndex(val) === -1) {
+        this.add.push(parseInt(val));
+      } else if (this.add.indexOf(val) !== -1) {
+        this.add.splice(parseInt(val), 1);
+      }
+ */
+
+      let index = this.add.findIndex((a) => a === parseInt(val));
+      if (index < 0) this.add.push(parseInt(val));
+      else this.add.splice(index, 1);
+      console.log(index);
     },
   },
   async created() {
@@ -334,22 +349,23 @@ import axios from "axios";
     },
 
     TotalValue: function () {
-      let total = parseFloat(this.eachorder.price) * parseFloat(this.quantity);
+      /*
+let total = parseFloat(this.eachorder.price) * parseFloat(this.quantity);
       let sum = 0;
 
       for (let i = 0; i < this.add.length; i++) {
-        sum += parseFloat(this.add[i]);
+        sum += parseInt(this.add[i]);
       }
 
       console.log(this.add);
-      return total + sum;
-
-      /* 
+      return total + sum; */
       let total = parseInt(this.eachorder.price) * parseInt(this.quantity);
       let sum = this.add.reduce(function (a, b) {
         return parseInt(a) + parseInt(b);
       }, 0);
-      return total + sum; */
+
+      console.log(this.add);
+      return total + this.quantity * sum;
     },
   },
   mounted: {},

@@ -129,30 +129,30 @@ const router = new VueRouter({
 			path: '/teaana-products',
 			name: 'StoredProducts',
 			component: StoredProducts,
-			/* 	beforeEnter: (to, from, next) => {
-					if (store.state.authenticated == false) {
-						next("/teaana-login")
-					}
-					else {
-						next();
-					}
+			beforeEnter: (to, from, next) => {
+				if (store.state.authenticated == false) {
+					next("/teaana-login")
 				}
-	
-	 */
+				else {
+					next();
+				}
+			}
+
+
 		},
 		{
 			path: '/teaana-supplies',
 			name: 'StoredSupplies',
 			component: StoredSupplies,
-			/* 			beforeEnter: (to, from, next) => {
-							if (store.state.authenticated == false) {
-								next("/teaana-login")
-							}
-							else {
-								next();
-							}
-						}
-			 */
+			beforeEnter: (to, from, next) => {
+				if (store.state.authenticated == false) {
+					next("/teaana-login")
+				}
+				else {
+					next();
+				}
+			}
+
 
 		},
 		{
