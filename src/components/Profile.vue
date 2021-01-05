@@ -53,7 +53,7 @@
             role="tab"
             data-toggle="tab"
           >
-            <label style="color: #5cd85c">Active</label>
+            <label style="color: #5cd85c">My</label>
             <label>Order</label>
           </a>
         </li>
@@ -64,32 +64,12 @@
             role="tab"
             data-toggle="tab"
           >
-            <label style="color: #5cd85c">Past</label>
-            <label>Order</label>
           </a>
         </li>
       </ul>
 
       <div class="tab-content">
         <div class="tab-pane table-responsive p-0 active" id="firsttab">
-          <b-form-input
-            v-model="search"
-            placeholder="ex. Oreo, Thai"
-            class="col-2 m-1 d-inline fill"
-          >
-          </b-form-input>
-          <b-form-select
-            v-model="category"
-            :options="options1"
-            class="col-2 m-1 d-inline fill"
-          ></b-form-select>
-
-          <b-form-select
-            v-model="pricing"
-            :options="options2"
-            class="col-2 m-1 d-inline fill"
-          ></b-form-select>
-
           <div class="scrollable overflow-auto">
             <table class="table sticky table-borderless text-center">
               <thead class="col-lg-12">
@@ -112,29 +92,6 @@
             </table>
           </div>
         </div>
-
-        <div
-          class="tab-pane fade table-responsive p-0"
-          id="secondtab"
-          v-if="activeorders != null"
-        >
-          <div class="scrollable overflow-auto">
-            <table class="table sticky table-borderless text-center">
-              <thead>
-                <tr>
-                  <th scope="col">Product</th>
-                  <th scope="col">Price</th>
-                  <th scope="col">Date ordered</th>
-                </tr>
-              </thead>
-              <tbody v-for="(pastorder, idx) in filter" :key="idx">
-                <tr class="mt-2 shadow-sm" style="border-radius: 20px">
-                  <td class="text-dark">{{ pastorder.name }}</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
       </div>
     </div>
   </section>
@@ -147,9 +104,9 @@ axios.defaults.withCredentials = true;
 export default {
   data() {
     return {
-      pastorders: null,
+      pastorders: [],
       activeorders: null,
-      account: [],
+      account: null,
 
       email: null,
       name: null,
@@ -206,57 +163,6 @@ export default {
     },
   },
   computed: {
-    filter() {
-      //variable where to store filtered data
-      let data = {};
-
-      //returns all products if values are null
-      if (
-        this.search == null ||
-        (this.search == "" && this.category == null && this.pricing == null)
-      ) {
-        if (this.sort == "desc") {
-          return this.activeorders.slice().sort((a, b) => {
-            return b.total - a.total;
-          });
-        }
-        if (this.sort == "asc") {
-          return this.activeorders.slice().sort((a, b) => {
-            return a.total - b.total;
-          });
-        }
-        return this.activeorders;
-      }
-
-      //Filter for search
-      data = this.activeorders.filter((el) => {
-        if (this.search != null && this.search != "") {
-          console.log(1);
-          return el.uid.match(new RegExp(`${this.search}`, "gi"));
-        }
-        if (
-          this.search == null ||
-          (this.search == "" && this.category != null)
-        ) {
-          console.log(2);
-          return el.status == this.category;
-        }
-      });
-
-      if (this.sort != null) {
-        data.sort((a, b) => {
-          if (this.sort == "desc") {
-            return b.total - a.total;
-          }
-          return a.total - b.total;
-        });
-      }
-
-      console.log(data);
-
-      //returns filted data
-      return data;
-    },
     TotalValue: function () {
       let total = this.addorders.price * this.quantity;
       return total;

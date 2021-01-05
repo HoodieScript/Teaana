@@ -15,7 +15,7 @@
           <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
               <div class="modal-header">
-                <h5 class="modal-title" id="newAddons">Update Addon</h5>
+                <h5 class="modal-title" id="newAddons">Update Order</h5>
                 <button
                   type="button"
                   class="close"
@@ -26,20 +26,45 @@
                 </button>
               </div>
               <div class="modal-body">
-                <form>
-                  <div class="form-group text-left">
-                    <small class="pb-3">Addon Name</small>
+                <form method="post" @submit.prevent="updateCart(eachofcart.id)">
+                  <!--    <div class="form-group">
+                    <img
+                      class="img img-fluid w-75 m-auto border-0 form-control"
+                      alt="Tea-ana-product"
+                      style="height: auto"
+                      :src="path + eachofcart.supply.imagePath"
+                      fluid
+                    />
+                  </div> -->
+                  <!--   <div class="form-group text-left">
+                    <small class="pb-3">Product Name</small>
                     <input
                       type="text"
                       class="form-control"
                       v-model="eachofcart.name"
                     />
+                  </div> -->
+                  <!--                   <div class="form-group text-left">
+                    <small class="pb-3">Product Price</small>
+                    <input
+                      type="text"
+                      class="form-control"
+                      v-model="eachofcart.price"
+                    />
+                  </div>
+ -->
+                  <div class="form-group text-left">
+                    <small class="pb-3">Product Quantity</small>
+                    <input
+                      type="number"
+                      class="form-control"
+                      v-model.number="eachofcart.quantity"
+                    />
                   </div>
 
                   <div class="form-group">
                     <input
-                      type="button"
-                      @click="updateCart(eachofcart.cartitem_id)"
+                      type="submit"
                       class="btn btn-sm float-right pl-3 pr-3 text-white"
                       style="background-color: #028476; border-radius: 20px"
                       value="update"
@@ -73,7 +98,7 @@
                     fluid
                   />
                 </td>
-                <td>{{ cartlist.supply.name }} {{ idx }}</td>
+                <td>{{ cartlist.supply.name }}</td>
                 <td>{{ cartlist.supply.price }}</td>
                 <td>{{ cartlist.quantity }}</td>
                 <td>
@@ -81,7 +106,7 @@
                     class="btn"
                     data-toggle="modal"
                     data-target="#updatecart"
-                    @click="eachCart(cartlist.cartitem_id)"
+                    @click="eachCart(cartlist.id)"
                   >
                     <i class="far fa-edit"></i>
                   </button>
@@ -94,9 +119,9 @@
           </table>
         </div>
       </div>
-      <div class="col-lg-4 border minvh-100 form p-4">
+      <div class="col-lg-4 minvh-100 form p-4">
         <h1 class="text-dark">Payment</h1>
-        <form class="p-4">
+        <form class="p-4" @submit.prevent="Paymentsubmit()">
           <div class="form-group text-left mb-3">
             <p class="text-dark">Shipping Address</p>
             <small class="text-secondary"
@@ -143,13 +168,12 @@
                 v-model.number="totalItem"
               />
             </div>
-            <div class="input-group mb-3">
+            <div class="input-group mb-3" v-if="totalItem > 0">
               <input
-                type="button"
+                type="submit"
                 value="Check out"
                 class="btn btn-sm mx-auto w-50 border-0 text-white"
                 style="background-color: #028476"
-                @click="Paymentsubmit()"
               />
             </div>
           </div>
@@ -173,6 +197,7 @@ export default {
       eachofcart: [],
       /* data fields */
       imagePath: null,
+      qty: null,
       name: null,
       price: null,
       quantity: null,
@@ -205,31 +230,40 @@ export default {
       console.log(this.cartlists);
     },
 
-    async Deletecart(id) {
+    Deletecart: async function (id) {
       axios
-        .delete(`https://api.tea-ana.com/v1/cart/supplies/` + id)
+        .delete(`https://api.tea-ana.com/v1/cart/supplies/item/` + id)
         .then((res) => {
           console.log(res);
           swal("Record Delete!", "New changes are applied!", "success");
+          this.getSuppliescart();
         })
         .catch((err) => {
           console.error(err);
         });
     },
 
-    async eachCart(cartitem_id) {
+    async eachCart(id) {
       axios
-        .get(`https://api.tea-ana.com/v1/cart/supplies/item/` + cartitem_id)
+        .get(`https://api.tea-ana.com/v1/cart/supplies/item/` + id)
         .then((response) => {
           this.eachofcart = response.data.cart;
         });
       console.log(this.eachofcart);
     },
-    updatecart: async function (cartitem_id) {
+    updateCart: async function (id) {
       axios
-        .get(`https://api.tea-ana.com/v1/cart/supplies/item/` + cartitem_id)
+        .get(`https://api.tea-ana.com/v1/cart/supplies/item/` + id, {
+          quantity: this.eachofcart.quantity,
+        })
         .then((response) => {
-          this.eachofcart = response.data.cart;
+          console.log(response);
+          $("#updatecart").modal("hide");
+          swal("Order Updated!", "New changes are applied!", "success");
+          this.getSuppliescart();
+        })
+        .catch((error) => {
+          console.log(error.response);
         });
     },
     Paymentsubmit: async function () {

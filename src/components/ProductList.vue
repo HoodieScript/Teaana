@@ -109,6 +109,8 @@
             </div>
             <div class="modal-body product-data">
               <form class="row" method="post" @submit.prevent="insertOrder">
+                <input type="hidden" v-model="eachorder.id" />
+
                 <div class="col-lg-7 border-right">
                   <div class="input-group">
                     <input
@@ -121,6 +123,7 @@
                       aria-describedby="basic-addon1"
                       v-model="eachorder.name"
                     />
+                    {{ eachorder.price }}
                   </div>
                   <figure>
                     <img
@@ -136,17 +139,24 @@
                 <div class="col-lg-5">
                   <div class="form-group">
                     <select
+                      required
                       class="form-control custom-select mb-2"
                       v-for="(option, idx) in eachorder.options"
                       :key="idx"
+                      v-model="values"
                     >
                       <option>{{ option.name }}</option>
-                      <option v-for="(opt, idx) in option.values" :key="idx">
+                      <option
+                        v-for="(opt, idx) in option.values"
+                        :key="idx"
+                        :value="opt"
+                      >
                         {{ opt.name }}
                       </option>
                     </select>
 
                     <input
+                      required
                       type="number"
                       class="form-control"
                       placeholder="Select Quantity"
@@ -161,18 +171,18 @@
                     :key="idx"
                   >
                     <input
-                      class="form-check-input"
+                      class="form-check-input input"
                       type="checkbox"
                       :id="addon.id"
                       v-bind:value="addon.price"
-                      v-on:input="updateVals($event.target.value)"
+                      v-on:input="updateVals($event)"
                     />
 
                     <label class="form-check-label" for="exampleCheck1"
                       >{{ addon.name }} ₱{{ addon.price }}
                     </label>
                   </div>
-
+                  <p>{{ Details }}</p>
                   <hr />
                   <div class="form-group" v-if="TotalValue > 0">
                     <p class="text-center">Price varies on selected order</p>
@@ -207,8 +217,9 @@
 </template>
 <script>
 import axios from "axios";
-/* import $ from "jquery";
- */ export default {
+import swal from "sweetalert";
+import $ from "jquery";
+export default {
   data() {
     return {
       quantity: 1,
@@ -217,6 +228,7 @@ import axios from "axios";
       subtotal: [],
       //v-model for filters
       addons: [],
+      details: [],
 
       search: "",
       category: null,
@@ -226,6 +238,7 @@ import axios from "axios";
       imagePath: null,
       pagination: [],
       add: [],
+      values: [],
 
       //File Path
       path: "https://api.tea-ana.com/uploads/",
@@ -256,7 +269,10 @@ import axios from "axios";
       ],
     };
   },
-
+  async created() {
+    // fetch the data pag ka load
+    this.getProducts();
+  },
   methods: {
     async getProducts() {
       let response = await axios.get(
@@ -275,26 +291,40 @@ import axios from "axios";
       console.log(this.eachorder);
     },
     insertOrder: async function () {
-      axios.post("https://api.tea-ana.com/v1/cart", {});
+      axios
+        .post("https://api.tea-ana.com/v1/cart/", {
+          product_id: this.eachorder.id,
+          quantity: this.quantity,
+          details: this.options,
+        })
+        .then((response) => {
+          console.log(response);
+          $("#product-cart").modal("hide");
+          swal("Product added!", "Check your order in the Cart!", "success");
+          this.getSupplies();
+        })
+        .catch((error) => {
+          console.log(error.response);
+        });
     },
     updateVals(val) {
-      /* if (this.add.findIndex(val) === -1) {
+      /*       if (this.add.findIndex(val) === -1) {
         this.add.push(parseInt(val));
       } else if (this.add.indexOf(val) !== -1) {
         this.add.splice(parseInt(val), 1);
       }
  */
+      /*  if (val.target.checked) {
+        this.add.push(parseInt(val.target.value));
+      } else this.add.splice(parseInt(val.target.value), 1); */
 
-      let index = this.add.findIndex((a) => a === parseInt(val));
-      if (index < 0) this.add.push(parseInt(val));
+      let index = this.add.indexOf((a) => a === parseInt(val));
+      if (val.target.checked) this.add.push(parseInt(val.target.value));
       else this.add.splice(index, 1);
       console.log(index);
     },
   },
-  async created() {
-    // fetch the data pag ka load
-    this.getProducts();
-  },
+
   computed: {
     filter() {
       //variable where to store filtered data
@@ -349,8 +379,7 @@ import axios from "axios";
     },
 
     TotalValue: function () {
-      /*
-let total = parseFloat(this.eachorder.price) * parseFloat(this.quantity);
+      /*       let total = parseFloat(this.eachorder.price) * parseFloat(this.quantity);
       let sum = 0;
 
       for (let i = 0; i < this.add.length; i++) {
@@ -366,6 +395,15 @@ let total = parseFloat(this.eachorder.price) * parseFloat(this.quantity);
 
       console.log(this.add);
       return total + this.quantity * sum;
+    },
+    Details: function () {
+      let arr = [];
+
+      for (var i in this.values) {
+        arr.push(this.values[i]);
+      }
+      console.log(arr);
+      return arr;
     },
   },
   mounted: {},
