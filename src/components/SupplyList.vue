@@ -19,13 +19,7 @@
           class="col-2 m-1 d-inline fill"
         >
         </b-form-input>
-        <!-- 
-        <b-form-select
-          v-model="type"
-          :options="options2"
-          class="col-2 m-1 d-inline fill"
-        ></b-form-select>
- -->
+    
         <b-form-select
           v-model="sort"
           :options="options3"
@@ -214,7 +208,10 @@ export default {
       ],
     };
   },
-
+  async created() {
+    // fetch the data pag ka load
+    this.getSupplies();
+  },
   methods: {
     async getSupplies() {
       let response = await axios.get(
@@ -249,10 +246,7 @@ export default {
         });
     },
   },
-  async created() {
-    // fetch the data pag ka load
-    this.getSupplies();
-  },
+
   computed: {
     filter() {
       //variable where to store filtered data

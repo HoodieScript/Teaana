@@ -1,11 +1,11 @@
-<template>
+  <template>
   <div>
     <NavBar />
     <CartList />
     <Footer />
   </div>
 </template>
-<script>
+  <script>
 import CartList from "@/components/Cartlist.vue";
 import Footer from "@/components/NavFooter.vue";
 import NavBar from "@/components/NavBar.vue";
@@ -18,7 +18,7 @@ export default {
   },
 };
 </script>
-<style scoped>
+  <style scoped>
 .cart {
   margin-top: 50px;
 }

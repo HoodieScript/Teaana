@@ -77,6 +77,7 @@
                   aria-describedby="inputGroupFileAddon04"
                   aria-label="Upload"
                 />
+                <small> accept image less than 5MB</small>
               </div>
 
               <div class="form-group text-left">
@@ -188,6 +189,7 @@
                   aria-describedby="inputGroupFileAddon04"
                   aria-label="Upload"
                 />
+                <small> accept image less than 5MB</small>
               </div>
 
               <div class="form-group text-left">
@@ -331,6 +333,12 @@ export default {
   async created() {
     // fetch the data pag ka load
     this.getProducts();
+    setInterval(
+      function () {
+        this.getProducts();
+      }.bind(this),
+      500
+    );
   },
 
   methods: {

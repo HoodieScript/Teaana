@@ -89,6 +89,13 @@ export default {
   async created() {
     // fetch the data pag ka load
     this.getUsers();
+
+    setInterval(
+      function () {
+        this.getUsers();
+      }.bind(this),
+      500
+    );
   },
 };
 </script>

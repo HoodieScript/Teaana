@@ -77,6 +77,7 @@
                   aria-describedby="inputGroupFileAddon04"
                   aria-label="Upload"
                 />
+                <small> accept image less than 5MB</small>
               </div>
 
               <div class="form-group text-left">
@@ -178,7 +179,6 @@
                   :src="path + eachofsupp.imagePath"
                   fluid
                 />
-
                 <input
                   type="file"
                   id="file"
@@ -190,6 +190,7 @@
                   aria-describedby="inputGroupFileAddon04"
                   aria-label="Upload"
                 />
+                <small> accept image less than 5MB</small>
               </div>
 
               <div class="form-group text-left">
@@ -326,6 +327,12 @@ export default {
   async created() {
     // fetch the data pag ka load
     this.getSupplies();
+    setInterval(
+      function () {
+        this.getSupplies();
+      }.bind(this),
+      500
+    );
   },
   methods: {
     onFileSelected(event) {

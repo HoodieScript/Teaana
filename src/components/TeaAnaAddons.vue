@@ -260,6 +260,13 @@ export default {
     // fetch the data pag ka load
     this.getAddons();
     this.getCategory();
+
+    setInterval(
+      function () {
+        this.getAddons();
+      }.bind(this),
+      500
+    );
   },
   methods: {
     /* fetch */

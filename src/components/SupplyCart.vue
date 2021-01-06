@@ -1,10 +1,18 @@
 <template >
   <section class="container-fluid">
     <div class="cart row border">
-      <div class="col-lg-8 p-4">
+      <div class="col-lg-8 p-4 row">
+        <div class="col-lg-6">
         <h1 class="text-left mb-3 font-weight-bold">
           <label>Your</label> <label>Cart</label>
         </h1>
+
+        </div>
+        <div class="col-lg-6">
+        <input type="text" class="form-control" v-model="search" placeholder="ex. Sealer Machine">
+
+        </div>
+
         <div
           class="modal fade"
           id="updatecart"
@@ -87,7 +95,7 @@
                 <th scope="col">Action</th>
               </tr>
             </thead>
-            <tbody v-for="(cartlist, idx) in cartlists" :key="idx">
+            <tbody v-for="(cartlist, idx) in normalfilter" :key="idx">
               <tr class="mt-2 shadow-sm" style="border-radius: 20px">
                 <td>
                   <img
@@ -206,10 +214,19 @@ export default {
       address: null,
       paymentMethod: null,
       total: null,
+
+      search: "",
     };
   },
   async created() {
     this.getSuppliescart();
+
+    setInterval(
+      function () {
+        this.getSuppliescart();
+      }.bind(this),
+      500
+    );
   },
   methods: {
     getProfile: async function () {
@@ -289,6 +306,11 @@ export default {
     },
   },
   computed: {
+     normalfilter:function (){
+        return this.cartlists.filter((cartlist)=>{
+          return cartlist.supply.name.match(new RegExp(`${this.search}`, "gi"));
+        });
+    },
     totalItem: function () {
       let sum = 0;
       this.cartlists.forEach(function (cartlist) {
