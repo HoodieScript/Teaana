@@ -95,7 +95,7 @@
                     :value="category.id"
                     v-bind:key="idx"
                   >
-                    {{ category.id }} - {{ category.name }}
+                     {{ category.name }}
                   </option>
                 </select>
               </div>
@@ -172,7 +172,7 @@
                     :value="category.id"
                     v-bind:key="idx"
                   >
-                    {{ category.id }} - {{ category.name }}
+                     {{ category.name }}
                   </option>
                 </select>
               </div>
@@ -258,7 +258,6 @@ export default {
   },
   async created() {
     // fetch the data pag ka load
-    this.getAddons();
     this.getCategory();
 
     setInterval(

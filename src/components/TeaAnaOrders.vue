@@ -78,8 +78,10 @@
                     required
                   >
                     <option value="Pending" disabled>Pending</option>
-                    <option value="1">Confirmed</option>
-                    <option value="2">Canceled</option>
+                    <option value="Confirmed">Confirmed</option>
+                    <option value="Cenceled">Canceled</option>
+                    <option value="In-transit">In-transit</option>
+                    <option value="Delivered">Delivered</option>
                   </select>
                 </div>
               </div>
@@ -197,13 +199,12 @@ export default {
   },
   async created() {
     // fetch the data pag ka load
-    this.getOrders();
 
     setInterval(
       function () {
         this.getOrders();
       }.bind(this),
-      500
+      1000
     );
   },
   methods: {
@@ -217,7 +218,6 @@ export default {
         "https://api.tea-ana.com/v1/orders/supplies" //endpoint
       );
       this.orders = response.data.data;
-      console.log(this.orders);
     },
     /* get id */
     eachOrder: async function (uid) {

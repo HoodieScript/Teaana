@@ -101,7 +101,7 @@
                   <img
                     class="img img-fluid w-75 m-auto border-0 form-control"
                     alt="Tea-ana-product"
-                    style="height: auto"
+                    style="height: 120px; width: 200px;"
                     :src="path + cartlist.supply.imagePath"
                     fluid
                   />

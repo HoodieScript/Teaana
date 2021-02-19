@@ -102,16 +102,16 @@
               </div>
 
               <div class="form-group text-left">
-                <small class="pb-3">Suppy Category</small>
+                <small class="pb-3">Supply Category</small>
                 <select
                   class="form-control custom-select"
                   required
                   v-model.number="categoryId"
                 >
-                  <option value="1">1</option>
-                  <option value="2">2</option>
-                  <option value="3">3</option>
-                  <option value="4">4</option>
+                  <option value="1">Equipments</option>
+                  <option value="2">Creamer</option>
+                  <option value="3">Casa Flavor</option>
+                  <option value="4">Sinkers</option>
                 </select>
               </div>
 
@@ -218,10 +218,10 @@
                   required
                   v-model.number="eachofsupp.categoryId"
                 >
-                  <option value="1">1</option>
-                  <option value="2">2</option>
-                  <option value="3">3</option>
-                  <option value="4">4</option>
+                  <option value="1">Equipments</option>
+                  <option value="2">Creamer</option>
+                  <option value="3">Casa Flavor</option>
+                  <option value="4">Sinkers</option>
                 </select>
               </div>
 
@@ -270,7 +270,7 @@
               <img
                 class="img img-fluid w-75 m-auto border-0 form-control"
                 alt="Tea-ana-product"
-                style="height: auto"
+                style="height: 120px; width: 200px"
                 :src="path + supply.imagePath"
                 fluid
               />
@@ -326,7 +326,6 @@ export default {
   },
   async created() {
     // fetch the data pag ka load
-    this.getSupplies();
     setInterval(
       function () {
         this.getSupplies();

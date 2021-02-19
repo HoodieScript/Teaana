@@ -56,7 +56,6 @@ export default {
         "https://api.tea-ana.com/v1/auth/users" //endpoint
       );
       this.users = response.data.data;
-      console.log(this.users);
     },
 
     /* insert */
@@ -88,8 +87,7 @@ export default {
   computed: {},
   async created() {
     // fetch the data pag ka load
-    this.getUsers();
-
+    
     setInterval(
       function () {
         this.getUsers();

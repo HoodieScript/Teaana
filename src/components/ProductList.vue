@@ -10,7 +10,6 @@
       </h1>
     </div>
     <div class="container min-vh-100">
-      {{ category }} {{ search }} {{ type }} {{ sort }}
       <div class="w-100 filters">
         <b-form-input
           v-model="search"
@@ -70,6 +69,8 @@
                 id="show-btn"
                 data-toggle="modal"
                 data-target="#product-cart"
+                data-backdrop="static"
+                data-keyboard="false"
                 class="align-self-center float-right p-0 btn btn-md"
                 style="color: #5cd85c"
                 @click="eachProduct(product.id)"
@@ -103,6 +104,7 @@
                 class="border-0 close"
                 data-dismiss="modal"
                 aria-label="Close"
+                @click="clear"
               >
                 <span aria-hidden="true">&times;</span>
               </button>
@@ -123,7 +125,6 @@
                       aria-describedby="basic-addon1"
                       v-model="eachorder.name"
                     />
-                    {{ eachorder.price }}
                   </div>
                   <figure>
                     <img
@@ -139,17 +140,16 @@
                 <div class="col-lg-5">
                   <div class="form-group">
                     <select
+                      @click="OnChange"
                       required
-                      class="form-control custom-select mb-2"
+                      class="form-control custom-select mb-2 superSelect"
                       v-for="(option, idx) in eachorder.options"
                       :key="idx"
-                      v-model="values"
                     >
-                      <option>{{ option.name }}</option>
                       <option
                         v-for="(opt, idx) in option.values"
                         :key="idx"
-                        :value="opt"
+                        :value="{ name: opt.name, price: opt.price }"
                       >
                         {{ opt.name }}
                       </option>
@@ -164,25 +164,21 @@
                       v-model="quantity"
                     />
                   </div>
-
                   <div
-                    class="form-check form-control d-flex justify-content-start border-0"
-                    v-for="(addon, idx) in eachorder.addons"
+                    class="form-check form-group d-flex justify-content-start"
+                    v-for="(adds, idx) in eachorder.addons"
                     :key="idx"
                   >
                     <input
-                      class="form-check-input input"
                       type="checkbox"
-                      :id="addon.id"
-                      v-bind:value="addon.price"
-                      v-on:input="updateVals($event)"
+                      class="form-check-input"
+                      :key="adds.id"
+                      :value="adds.name + ' ' + adds.price"
+                      v-model="myads"
                     />
-
-                    <label class="form-check-label" for="exampleCheck1"
-                      >{{ addon.name }} ₱{{ addon.price }}
-                    </label>
+                    {{ adds.name }} {{ adds.price }} pesos
                   </div>
-                  <p>{{ Details }}</p>
+
                   <hr />
                   <div class="form-group" v-if="TotalValue > 0">
                     <p class="text-center">Price varies on selected order</p>
@@ -238,6 +234,7 @@ export default {
       imagePath: null,
       pagination: [],
       add: [],
+      myads: [],
       values: [],
 
       //File Path
@@ -274,6 +271,23 @@ export default {
     this.getProducts();
   },
   methods: {
+    clear: function () {
+      this.myads = [];
+    },
+    OnChange: function () {
+      var selectedOptions = [];
+
+      $("select.superSelect").each(function () {
+        var $option = $(this); /* 
+        var $option2 = $(this); */
+        var myObj = $option.val();
+        alert(JSON.stringify(myObj));
+        selectedOptions.push(myObj);
+      });
+
+      this.values = selectedOptions;
+      console.log(this.values);
+    },
     async getProducts() {
       let response = await axios.get(
         "https://api.tea-ana.com/v1/products?select=id,name,price,productType,imagePath,category_id" //endpoint
@@ -295,7 +309,7 @@ export default {
         .post("https://api.tea-ana.com/v1/cart/", {
           product_id: this.eachorder.id,
           quantity: this.quantity,
-          details: this.options,
+          details: this.values,
         })
         .then((response) => {
           console.log(response);
@@ -306,22 +320,6 @@ export default {
         .catch((error) => {
           console.log(error.response);
         });
-    },
-    updateVals(val) {
-      /*       if (this.add.findIndex(val) === -1) {
-        this.add.push(parseInt(val));
-      } else if (this.add.indexOf(val) !== -1) {
-        this.add.splice(parseInt(val), 1);
-      }
- */
-      /*  if (val.target.checked) {
-        this.add.push(parseInt(val.target.value));
-      } else this.add.splice(parseInt(val.target.value), 1); */
-
-      let index = this.add.indexOf((a) => a === parseInt(val));
-      if (val.target.checked) this.add.push(parseInt(val.target.value));
-      else this.add.splice(index, 1);
-      console.log(index);
     },
   },
 
@@ -379,31 +377,16 @@ export default {
     },
 
     TotalValue: function () {
-      /*       let total = parseFloat(this.eachorder.price) * parseFloat(this.quantity);
-      let sum = 0;
+      let subtotalvalue =
+        parseFloat(this.eachorder.price) * parseFloat(this.quantity);
+      let totaladdons = 0;
 
-      for (let i = 0; i < this.add.length; i++) {
-        sum += parseInt(this.add[i]);
+      for (let i = 0; i < this.myads.length; i++) {
+        totaladdons += parseInt(this.myads[i].length);
       }
 
-      console.log(this.add);
-      return total + sum; */
-      let total = parseInt(this.eachorder.price) * parseInt(this.quantity);
-      let sum = this.add.reduce(function (a, b) {
-        return parseInt(a) + parseInt(b);
-      }, 0);
-
-      console.log(this.add);
-      return total + this.quantity * sum;
-    },
-    Details: function () {
-      let arr = [];
-
-      for (var i in this.values) {
-        arr.push(this.values[i]);
-      }
-      console.log(arr);
-      return arr;
+      console.log(this.myads);
+      return subtotalvalue + totaladdons * this.quantity;
     },
   },
   mounted: {},

@@ -213,13 +213,13 @@
               <div class="form-group text-left">
                 <small class="pb-3">Product Category</small>
                 <select
-                  class="form-control custom-select"
-                  v-model.number="eachofprods.category_id"
+                  class="custom-select form-group"
+                  v-model="eachofprods.category_id"
                 >
                   <option value="1">Milktea</option>
                   <option value="2">Coffee</option>
-                  <option value="3">Wings</option>
-                  <option value="4">Takoyaki</option>
+                  <option value="3">Takoyaki</option>
+                  <option value="4">Wings</option>
                 </select>
               </div>
 
@@ -267,7 +267,7 @@
               <img
                 class="img img-fluid w-75 m-auto border-0 form-control"
                 alt="Tea-ana-product"
-                style="height: auto"
+                style="height: 120px; width: 200px"
                 :src="path + product.imagePath"
                 fluid
               />
@@ -316,12 +316,12 @@ import $ from "jquery";
 export default {
   data() {
     return {
-      categories: [],
       products: [],
       eachofprods: [],
-
+      categories: [],
       name: null,
       price: null,
+      category: [],
       category_id: null,
       productType: null,
       imagePath: null,
@@ -332,7 +332,7 @@ export default {
   },
   async created() {
     // fetch the data pag ka load
-    this.getProducts();
+    this.getCategories();
     setInterval(
       function () {
         this.getProducts();
@@ -359,12 +359,15 @@ export default {
         });
       console.log(this.eachofprods);
     },
+    async getCategories() {
+      let response = await axios.get("https://api.tea-ana.com/v1/categories/");
+      this.categories = response.data.data;
+    },
     async getProducts() {
       let response = await axios.get(
         "https://api.tea-ana.com/v1/products/" //endpoint
       );
       this.products = response.data.data;
-      console.log(this.products);
     },
     insertProduct: async function () {
       const formData = new FormData();
